@@ -59,11 +59,18 @@ class ReturnSheetWindow(baseClass):
             self.user_input.clear()
 
             # update text field
-            return_data_string = f"Rto: {self.return_data.get('rto')}\n" \
-                                 f"Customer Return: {self.return_data.get('customer return')}\n" \
-                                 f"Wrong Courier Return: {self.return_data.get('wrong courier return')}\n" \
-                                 f"Wrong Customer Return: {self.return_data.get('wrong customer return')}\n" \
-                                 f"Cancel: {self.return_data.get('cancel')}\n"
+            rto = self.return_data.get('rto')
+            customer_return = self.return_data.get('customer return')
+            wrong_courier_return = self.return_data.get('wrong courier return')
+            wrong_customer_return = self.return_data.get('wrong customer return')
+            cancel = self.return_data.get('cancel')
+            total = rto + customer_return + wrong_courier_return + wrong_customer_return
+            return_data_string = f"Rto: {rto}\n" \
+                                 f"Customer Return: {customer_return}\n" \
+                                 f"Wrong Courier Return: {wrong_courier_return}\n" \
+                                 f"Wrong Customer Return: {wrong_customer_return}\n" \
+                                 f"Cancel: {cancel}\n" \
+                                 f"Total Return: {total}"
             self.return_data_output.setPlainText(return_data_string)
         except Exception as e:
             print(e)
