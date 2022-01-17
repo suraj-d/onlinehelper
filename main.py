@@ -11,6 +11,7 @@ from code.OpenURL import OrderUrlDialog, open_order_url
 from code.OrderEntry import OrderEntryWindow
 from code.OrderSheet import OrderSheetWindow
 from code.OrderWebScrap import OrderScrapWindow
+from code.ReturnSheet import ReturnSheetWindow
 
 gui_file = "gui/mainApplication.ui"
 Ui_order_form, baseClass = uic.loadUiType(gui_file)
@@ -42,8 +43,9 @@ class MainWindow(baseClass):
         self.stock_sheet_button.clicked.connect(self.stock_sheet)
         self.order_check_button.clicked.connect(self.order_check)
         self.edit_order_url.clicked.connect(self.order_url)
-        self.order_sheet_button.clicked.connect(self.order_sheet)
+        self.create_order_sheet_button.clicked.connect(self.order_sheet)
         self.scrap_order_button.clicked.connect(self.scrap_order)
+        self.create_return_sheet_button.clicked.connect(self.return_sheet)
 
         # server button
         self.server_shutdown_button.clicked.connect(self.server_shutdown)
@@ -90,6 +92,10 @@ class MainWindow(baseClass):
     @classmethod
     def order_sheet(cls):
         cls.order_sheet_window = OrderSheetWindow()
+
+    @classmethod
+    def return_sheet(cls):
+        cls.return_sheet_window = ReturnSheetWindow()
 
     @classmethod
     def scrap_order(cls):
