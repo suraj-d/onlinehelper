@@ -60,21 +60,17 @@
      <string>Return Type:</string>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="plainTextEdit">
+   <widget class="QPlainTextEdit" name="return_data_output">
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>170</y>
+      <y>180</y>
       <width>381</width>
       <height>121</height>
      </rect>
     </property>
     <property name="plainText">
-     <string>Courier return:
-customer return:
-wrong customer return:
-wrong courier return:
-cancel: </string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="record_button">
