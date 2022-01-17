@@ -32,11 +32,12 @@ class ReturnSheetWindow(baseClass):
         self.record_button.clicked.connect(self.record_next)
         self.save_return_sheet_button.clicked.connect(self.save_return_sheet)
 
-        return_data_string = f"Rto: {self.return_data.get('rto')}\n" \
-                             f"Customer Return: {self.return_data.get('customer return')}\n" \
-                             f"Wrong Courier Return: {self.return_data.get('wrong courier return')}\n" \
-                             f"Wrong Customer Return: {self.return_data.get('wrong customer return')}\n" \
-                             f"Cancel: {self.return_data.get('cancel')}\n"
+        return_data_string = f"Rto: 0\n" \
+                             f"Customer Return: 0\n" \
+                             f"Wrong Courier Return: 0\n" \
+                             f"Wrong Customer Return: 0\n" \
+                             f"Cancel: 0\n" \
+                             f"Total Return: 0"
         self.return_data_output.setPlainText(return_data_string)
         self.show()
 
