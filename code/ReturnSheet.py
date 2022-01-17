@@ -3,7 +3,6 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QFileDialog
-from openpyxl import Workbook
 
 from code.CommanFunction import create_xlsx_file
 
