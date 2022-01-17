@@ -92,7 +92,7 @@ class ReturnSheetWindow(baseClass):
 
     def keyPressEvent(self, event):
         try:
-            if event.key() == Qt.Key_Return:
+            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
                 self.record_next()
         except Exception as e:
             print(e)
