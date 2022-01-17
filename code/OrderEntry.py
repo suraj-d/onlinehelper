@@ -109,7 +109,7 @@ class OrderEntryWindow(baseClass):
         try:
             setting_last_file_path = QSettings("Order Helper", "LastSetting")  # path in regedit
 
-            last_open_file_path = setting_last_file_path.value("folder_path")  # get value
+            last_open_file_path = setting_last_file_path.value("order_xml_sheet_path")  # get value
 
             # open dialog box
             filepath = QFileDialog.getOpenFileName(self, 'Open File', last_open_file_path, "Excel File (*.xls *.xlsx)")
@@ -124,7 +124,7 @@ class OrderEntryWindow(baseClass):
 
                 self.file_name_output.setText(str(file_name))
 
-                setting_last_file_path.setValue("folder_path", folder_path)
+                setting_last_file_path.setValue("order_xml_sheet_path", folder_path)
 
                 self.read_excel_button.setEnabled(True)
         except Exception as e:
