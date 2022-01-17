@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSettings
 from PyQt5.QtWidgets import QApplication, QFileDialog
 
 from code.CommanFunction import create_xlsx_file
@@ -77,10 +77,18 @@ class ReturnSheetWindow(baseClass):
             print(e)
 
     def save_return_sheet(self):
-        filepath = QFileDialog.getSaveFileName(self, "Save Return Scan Sheet", "",
-                                               "Excel Files (*.xlsx)")
-        sheet_name = "Return Scan"
-        create_xlsx_file(self.return_list, filepath[0], sheet_name)
+        try:
+            setting_last_file_path = QSettings("Order Helper", "LastSetting")  # path in regedit
+
+            last_open_file_path = setting_last_file_path.value("return_sheet_path")  # get value
+            filepath = QFileDialog.getSaveFileName(self, "Save Return Scan Sheet",last_open_file_path,
+                                                   "Excel Files (*.xlsx)")
+            sheet_name = "Return Scan"  # sheet name and workbook name
+            if filepath[0] != "":
+                create_xlsx_file(self.return_list, filepath[0], sheet_name)
+                setting_last_file_path.setValue("return_sheet_path", filepath[0])
+        except Exception as e:
+            print(e)
 
     def keyPressEvent(self, event):
         try:
