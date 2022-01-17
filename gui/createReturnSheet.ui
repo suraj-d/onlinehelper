@@ -25,26 +25,12 @@
       <item>
        <widget class="QLabel" name="tracking_id_lbl">
         <property name="text">
-         <string>Tracking id:</string>
+         <string>Scan:</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QLineEdit" name="user_input"/>
-      </item>
-     </layout>
-    </item>
-    <item row="0" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QLabel" name="return_type_lbl">
-        <property name="text">
-         <string>Return Type:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="return_type_input"/>
       </item>
      </layout>
     </item>
@@ -72,6 +58,20 @@
        <string/>
       </property>
      </widget>
+    </item>
+    <item row="0" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="return_type_lbl">
+        <property name="text">
+         <string>Return Type:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="return_type_input"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
