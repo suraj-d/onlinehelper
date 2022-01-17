@@ -149,6 +149,13 @@ color: rgb(255, 255, 255);</string>
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="scrap_order_button">
+         <property name="text">
+          <string>Create Web Scrap Txt</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -207,13 +214,6 @@ color: rgb(255, 255, 255);</string>
        </size>
       </property>
      </spacer>
-    </item>
-    <item row="1" column="5">
-     <widget class="QPushButton" name="scrap_order_button">
-      <property name="text">
-       <string>Create Web Scrap Txt</string>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>
