@@ -17,11 +17,10 @@ def head_xml(tally_company_id):
 
 
 def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, sku_id, quantity,
-                   rate,
-                   shipping, cgst, sgst, igst, round_off, total, portal_name_id, current_date):
+                   rate, shipping, cgst, sgst, igst, round_off, total, portal_name_id, current_date):
     return f"""
             <TALLYMESSAGE xmlns:UDF="TallyUDF">
-             <VOUCHER REMOTEID="" VCHKEY="" VCHTYPE="Sales" ACTION="Create" OBJVIEW="Invoice Voucher View">
+             <VOUCHER VCHTYPE="Sales" ACTION="Create" OBJVIEW="Invoice Voucher View">
               <OLDAUDITENTRYIDS.LIST TYPE="Number">
                <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
               </OLDAUDITENTRYIDS.LIST>
@@ -116,9 +115,6 @@ def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_i
               <ISDELIVERYSAMEASCONSIGNEE>No</ISDELIVERYSAMEASCONSIGNEE>
               <ISDISPATCHSAMEASCONSIGNOR>No</ISDISPATCHSAMEASCONSIGNOR>
               <CHANGEVCHMODE>No</CHANGEVCHMODE>
-              <ALTERID> 78078</ALTERID>
-              <MASTERID> 56348</MASTERID>
-              <VOUCHERKEY>190992900685952</VOUCHERKEY>
               <INVENTORYENTRIES.LIST>
                <STOCKITEMNAME>{sku_id}</STOCKITEMNAME>
                <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
@@ -274,7 +270,7 @@ def return_body_xml(return_date_format, tally_vch_number, return_order_id, retur
                     piece, rate, shipping, cgst, sgst, igst, round_off, total, order_date_format, portal_name,
                     order_gst_state, customer_name, current_date_format):
     return f""" <TALLYMESSAGE xmlns: UDF = "TallyUDF">
-    <VOUCHER REMOTEID = ""VCHKEY = ""VCHTYPE = "Credit Note"ACTION = "Create"OBJVIEW = "Invoice Voucher View">
+    <VOUCHER VCHTYPE = "Credit Note" ACTION = "Create" OBJVIEW = "Invoice Voucher View">
      <OLDAUDITENTRYIDS.LIST TYPE = "Number">
       <OLDAUDITENTRYIDS> -1 </OLDAUDITENTRYIDS>
      </OLDAUDITENTRYIDS.LIST>
@@ -373,9 +369,6 @@ def return_body_xml(return_date_format, tally_vch_number, return_order_id, retur
      <ISDELIVERYSAMEASCONSIGNEE> No </ISDELIVERYSAMEASCONSIGNEE>
      <ISDISPATCHSAMEASCONSIGNOR> No </ISDISPATCHSAMEASCONSIGNOR>
      <CHANGEVCHMODE> No </CHANGEVCHMODE>
-     <ALTERID> 8791 </ALTERID>
-     <MASTERID> 4693 </MASTERID>
-     <VOUCHERKEY> 189884799123592 </VOUCHERKEY>
      <INVENTORYENTRIES.LIST>
       <STOCKITEMNAME>{design_number}</STOCKITEMNAME>
       <ISDEEMEDPOSITIVE> Yes </ISDEEMEDPOSITIVE>
@@ -789,26 +782,7 @@ def payment_order_data_3_xml():
 
 
 def tail_xml(tally_company_id):
-    return f"""<TALLYMESSAGE xmlns:UDF="TallyUDF">
-        <COMPANY>
-            <REMOTECMPINFO.LIST MERGE="Yes">
-               <NAME>e5df2bc1-c84a-4a0b-99f1-f7839af473fd</NAME>
-               <REMOTECMPNAME>{tally_company_id}</REMOTECMPNAME>
-               <REMOTECMPSTATE>Gujarat</REMOTECMPSTATE>
-           </REMOTECMPINFO.LIST>
-       </COMPANY>
-    </TALLYMESSAGE>
-
-    <TALLYMESSAGE xmlns:UDF="TallyUDF">
-       <COMPANY>
-           <REMOTECMPINFO.LIST MERGE="Yes">
-               <NAME>e5df2bc1-c84a-4a0b-99f1-f7839af473fd</NAME>
-               <REMOTECMPNAME>{tally_company_id}</REMOTECMPNAME>
-               <REMOTECMPSTATE>Gujarat</REMOTECMPSTATE>
-           </REMOTECMPINFO.LIST>
-       </COMPANY>
-    </TALLYMESSAGE>    
-    </REQUESTDATA>
+    return f"""</REQUESTDATA>
     </IMPORTDATA>
     </BODY>
     </ENVELOPE>
