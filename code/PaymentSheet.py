@@ -1,23 +1,211 @@
+import sys
+from datetime import datetime
+from os import path
+
+from PyQt5 import uic
+from PyQt5.QtCore import QSettings
+from PyQt5.QtWidgets import QApplication, QFileDialog
 from openpyxl import load_workbook
+from pyperclip import copy
 
-wb = load_workbook(r'S:\4. Accounting\0. Entry in tally\PaymentXML.xlsx', data_only=True)
-ws = wb['PaymentXML']
-ws_table = ws.tables['orderData']
+from code.CommanFunction import create_text_file
+from code.xmlFormats import head_xml, tail_xml, payment_body_1_xml, payment_bank_xml, payment_advance_fee_xml, \
+    payment_general_exp_xml, payment_unavl_xml, payment_order_data_1_xml, payment_order_data_2_xml, \
+    payment_order_data_3_xml
 
-try:
+if __name__ == "__main__":
+    gui_file = "../gui/createPaymentXML.ui"
+else:
+    gui_file = "gui/createPaymentXML.ui"
 
-    print('name:'+ ws_table.name)
-    print(ws_table.ref)
-    a = ws_table.ref
-    print(type(a))
-    for row in ws.iter_rows(range_string = a).value:
-        print(row)
-except Exception as e:
-    print(e)
+Ui_order_form, baseClass = uic.loadUiType(gui_file)
 
-# start from here
-for i in xrange(0, 100):
-    ...
-    for j in xrange(0, 100):
-        ...
-    ws.cell(row=i, column=j)
+
+class PaymentEntryWindow(baseClass):
+
+    def __init__(self):
+        super(PaymentEntryWindow, self).__init__()
+        uic.loadUi(gui_file, self)
+
+        self.browse_button.clicked.connect(self.browse_files)
+        self.generate_xml_button.clicked.connect(self.generate_xml_file)
+        self.copy_button.clicked.connect(self.copy_path)
+        self.show()
+
+    def browse_files(self):
+        setting_last_file_path = QSettings("Order Helper", "LastSetting")  # path in regedit
+        reg_edit_name = "payment_xml_sheet_path"
+        last_open_file_path = setting_last_file_path.value(reg_edit_name)  # get value
+
+        # open dialog box
+        filepath = QFileDialog.getOpenFileName(self, 'Open File', last_open_file_path, "Excel File (*.xls *.xlsx)")
+
+        if filepath[0] != "":
+            file_path = path.normpath(filepath[0])
+            self.excel_path_input.setText(file_path)
+            setting_last_file_path.setValue(reg_edit_name, file_path)  # save path to regedit
+
+    def generate_xml_file(self):
+        excel_file_path = self.excel_path_input.text()
+        sheet_name = "PaymentXML"
+        xml_date = get_payment_xml_file(excel_file_path, sheet_name)
+
+        if 'error' not in xml_date:
+            xml_string = xml_date.get('xml_string')
+            folder_path = path.split(self.excel_path_input.text())[0]
+            save_path = create_text_file(xml_string, folder_path, 'paymentXML')
+            self.xml_file_save_path.setText(save_path)
+        else:
+            print(xml_date.get('error'))
+
+    def copy_path(self):
+        copy(self.xml_file_save_path.text())
+        self.copy_button.setText("Copied")
+
+
+def get_payment_xml_file(excel_file_path, sheet_name):
+    """
+    :param excel_file_path:
+    :param sheet_name:
+    :return dict: xml_string or error in case of error
+    """
+    xml_string = ""
+    wb = load_workbook(excel_file_path)
+    ws = wb[sheet_name]
+
+    # Particular data
+    ws_particular_table = ws.tables['particularTable']
+    particular_data_range = ws[ws_particular_table.ref]
+    particular_data = []
+    try:
+        for cell in particular_data_range:
+            ledger = cell[0].value
+            debit = cell[1].value
+            credit = cell[2].value
+
+            # print(f'{ledger}, {debit}, {credit}')
+            if ledger not in ("Particular", 'Total'):
+                if debit not in (None, 0, ""):
+                    amount = round(abs(debit), 2) * -1
+                    deemed_positive = "Yes"
+                elif credit not in (None, 0, ""):
+                    amount = round(abs(credit), 2)
+                    deemed_positive = "No"
+                else:
+                    amount = 0
+                    ledger = ""
+                    deemed_positive = ""
+
+                particular_data.append([ledger, amount, deemed_positive])
+
+    except Exception as e:
+        return {'error': e}
+    # print(particular_date)
+
+    # assign variables
+    tally_company = "Sun Fashion And Lifestyle"
+    vch_no = ws['b3'].value
+    ref_no = ws['d20'].value
+    entry_date = datetime.strftime(ws['f3'].value, '%Y%m%d')
+    advance_fee_ledger = particular_data[0][0]
+    advance_fee_amnt = particular_data[0][1]
+    advance_fee_deemed_positive = particular_data[0][2]
+    tcs_igst_ledger = particular_data[1][0]
+    tcs_igst_amt = particular_data[1][1]
+    tcs_igst_deemed_positive = particular_data[1][2]
+    tcs_sgst_ledger = particular_data[2][0]
+    tcs_sgst_amt = particular_data[2][1]
+    tcs_sgst_deemed_positive = particular_data[2][2]
+    tcs_cgst_ledger = particular_data[3][0]
+    tcs_cgst_amt = particular_data[3][1]
+    tcs_cgst_deemed_positive = particular_data[3][2]
+    tds_ledger = particular_data[4][0]
+    tds_amt = particular_data[4][1]
+    tds_deemed_positive = particular_data[4][2]
+    unavbl_ledger = particular_data[5][0]
+    unavbl_amt_dr = particular_data[5][1]
+    unavbl_deemed_positive_dr = particular_data[5][2]
+    unavbl_amt_cr = particular_data[6][1]
+    unavbl_deemed_positive_cr = particular_data[6][2]
+    unavbl_agstName = ws['f11'].value
+    reimb_ledger = particular_data[7][0]
+    reimb_amt = particular_data[7][1]
+    reimb_deemed_positive = particular_data[7][2]
+    misc_adj_ledger = particular_data[8][0]
+    misc_adj_amt = particular_data[8][1]
+    misc_adj_deemed_positive = particular_data[8][2]
+    bank_ledger = particular_data[9][0]
+    bank_amt = particular_data[9][1]
+    bank_deemed_positive = particular_data[9][2]
+    portal_name = particular_data[10][0]
+    portal_amt = particular_data[10][1]
+    portal_deemed_positive = particular_data[10][2]
+    narration = f'{portal_name} settlement id: {ref_no}'
+
+    xml_string += head_xml(tally_company_id=tally_company)
+
+    xml_string += payment_body_1_xml(entry_date=entry_date, narration=narration, portal_name=portal_name, ref_no=ref_no,
+                                     vch_no=vch_no)
+    if bank_ledger != "":
+        xml_string += payment_bank_xml(ledger=bank_ledger, amount=bank_amt,
+                                       deemed_positive=bank_deemed_positive, entry_date=entry_date,
+                                       portal_name=portal_name)
+    if advance_fee_ledger != "":
+        xml_string += payment_advance_fee_xml(ledger=advance_fee_ledger, amount=advance_fee_amnt,
+                                              deemed_positive=advance_fee_deemed_positive, ref_no=ref_no)
+    if tcs_igst_ledger != "":
+        xml_string += payment_general_exp_xml(ledger=tcs_igst_ledger, amount=tcs_igst_amt,
+                                              deemed_positive=tcs_igst_deemed_positive)
+    if tcs_cgst_ledger != "":
+        xml_string += payment_general_exp_xml(ledger=tcs_cgst_ledger, amount=tcs_cgst_amt,
+                                              deemed_positive=tcs_cgst_deemed_positive)
+    if tcs_sgst_ledger != "":
+        xml_string += payment_general_exp_xml(ledger=tcs_sgst_ledger, amount=tcs_sgst_amt,
+                                              deemed_positive=tcs_sgst_deemed_positive)
+    if tds_ledger != "":
+        xml_string += payment_general_exp_xml(ledger=tds_ledger, amount=tds_amt,
+                                              deemed_positive=tds_deemed_positive)
+    if unavbl_ledger != "":
+        xml_string += payment_unavl_xml(ledger=unavbl_ledger, amount=unavbl_amt_dr,
+                                        deemed_positive=unavbl_deemed_positive_dr, ref_no=unavbl_agstName)
+
+        xml_string += payment_unavl_xml(ledger=unavbl_ledger, amount=unavbl_amt_cr,
+                                        deemed_positive=unavbl_deemed_positive_cr, ref_no=ref_no)
+    if reimb_ledger != "":
+        xml_string += payment_general_exp_xml(ledger=reimb_ledger, amount=reimb_amt,
+                                              deemed_positive=reimb_deemed_positive)
+    if misc_adj_ledger != "":
+        xml_string += payment_general_exp_xml(ledger=misc_adj_ledger, amount=misc_adj_amt,
+                                              deemed_positive=misc_adj_deemed_positive)
+    if portal_name != "":
+        xml_string += payment_order_data_1_xml(ledger=portal_name, amount=portal_amt,
+                                               deemed_positive=portal_deemed_positive)
+
+    # Order ids and amount details
+    ws_order_data_table = ws.tables['orderData']
+    order_data_range = ws[ws_order_data_table.ref]
+
+    try:
+        for cell in order_data_range:
+            order_id = cell[0].value
+            amount = cell[1].value
+            bill_type = cell[2].value
+            if order_id is None:
+                break
+            if order_id != "orderID":
+                xml_string += payment_order_data_2_xml(order_id=order_id, amount=amount, bill_type=bill_type)
+
+    except Exception as e:
+        return {'error': e}
+
+    xml_string += payment_order_data_3_xml()
+    xml_string += tail_xml(tally_company_id=tally_company)
+
+    return {"xml_string": xml_string}
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    w = PaymentEntryWindow()
+
+    sys.exit(app.exec_())
