@@ -13,9 +13,9 @@ from code.xmlFormats import head_xml, order_body_xml, return_body_xml, tail_xml
 from code.CommanFunction import read_excel_sheet, create_text_file
 
 if __name__ == "__main__":
-    gui_file = "../gui/orderToXML.ui"
+    gui_file = "../gui/createTallyXML.ui"
 else:
-    gui_file = "gui/orderToXML.ui"
+    gui_file = "gui/createTallyXML.ui"
 
 Ui_order_form, baseClass = uic.loadUiType(gui_file)
 
@@ -101,7 +101,7 @@ class OrderEntryWindow(baseClass):
         # button function
         self.browse_button.clicked.connect(self.browse_files)
         self.read_excel_button.clicked.connect(self.read_excel)
-        self.to_xml_button.clicked.connect(self.create_text_file)
+        self.to_xml_button.clicked.connect(self.generate_xml_file)
         self.to_mysql_button.clicked.connect(self.to_mysql)
         self.copy_save_button.clicked.connect(self.copy_text)
 
@@ -124,7 +124,7 @@ class OrderEntryWindow(baseClass):
 
                 self.file_name_output.setText(str(file_name))
 
-                setting_last_file_path.setValue("order_xml_sheet_path", folder_path)
+                setting_last_file_path.setValue("order_xml_sheet_path", folder_path)  # save path to regedit
 
                 self.read_excel_button.setEnabled(True)
         except Exception as e:
@@ -162,7 +162,7 @@ class OrderEntryWindow(baseClass):
 
         self.excel_data_output.setText(str(excel_data_string))
 
-    def create_text_file(self):
+    def generate_xml_file(self):
         try:
             self.start_row = int(self.start_row_input.text())
             self.last_row = int(self.last_row_input.text())
