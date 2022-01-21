@@ -12,6 +12,7 @@ from code.OrderEntry import OrderEntryWindow
 from code.OrderSheet import OrderSheetWindow
 from code.OrderWebScrap import OrderScrapWindow
 from code.ReturnSheet import ReturnSheetWindow
+from code.PaymentSheet import PaymentEntryWindow
 
 gui_file = "gui/mainApplication.ui"
 Ui_order_form, baseClass = uic.loadUiType(gui_file)
@@ -36,16 +37,20 @@ class MainWindow(baseClass):
         # tally xml buttons
         self.order_entry_button.clicked.connect(self.order_entry)
         self.return_entry_button.clicked.connect(self.order_entry)
+        self.payment_entry_button.clicked.connect(self.payment_entry)
 
-        # sheets button
+        # order check
+        self.order_check_button.clicked.connect(self.order_check)
+        self.edit_order_url.clicked.connect(self.order_url)
+
+        self.create_order_sheet_button.clicked.connect(self.order_sheet)
+        self.create_return_sheet_button.clicked.connect(self.return_sheet)
+
+        # sheets
         self.costing_sheet_button.clicked.connect(self.costing_sheet)
         self.price_cal_button.clicked.connect(self.price_sheet)
         self.stock_sheet_button.clicked.connect(self.stock_sheet)
-        self.order_check_button.clicked.connect(self.order_check)
-        self.edit_order_url.clicked.connect(self.order_url)
-        self.create_order_sheet_button.clicked.connect(self.order_sheet)
         self.scrap_order_button.clicked.connect(self.scrap_order)
-        self.create_return_sheet_button.clicked.connect(self.return_sheet)
 
         # server button
         self.server_shutdown_button.clicked.connect(self.server_shutdown)
@@ -54,6 +59,10 @@ class MainWindow(baseClass):
     @classmethod
     def order_entry(cls):
         cls.order_window = OrderEntryWindow()
+
+    @classmethod
+    def payment_entry(cls):
+        cls.payment_window = PaymentEntryWindow()
 
     @staticmethod
     def costing_sheet():
