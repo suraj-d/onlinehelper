@@ -120,15 +120,15 @@ class MainWindow(baseClass):
     # todo: paste to filtered row gui
     #  with start row and last row in excel data scan
     #  number of paste repeat
-    # todo: update sku in mysql gui
-    # todo: sync mysql sku list with google stock sheet
-    # todo: return scan excel sheet
-    #  if scan rto or customer change status for next scan
-    # todo: order scrap separate gui
-    #  with start and last row
-    #  show generate text in textbox with copy button
-    #  remove create text file
     # todo: improve load speed
+    # todo: FOR TALLY
+    #  get data from tally
+    #  get order id and return order id from tally
+    #  direct entry to tally, no text file create or save to mysql
+    #  get stock item from tally
+    #  create job challan entry in tally
+    #  create job receive entry in tally
+    #  create stock transfer entry in tally
 
 
 if __name__ == '__main__':
