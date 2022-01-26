@@ -21,12 +21,13 @@ class ReturnSheetWindow(baseClass):
         uic.loadUi(gui_file, self)
 
         # self.return_data = ['rto', 'customer return', 'wrong customer return', 'wrong courier return', 'cancel']
-        self.return_data = {'rto': 0,
+        self.return_data_count = {'rto': 0,
                             'customer return': 0,
                             'wrong customer return': 0,
                             'wrong courier return': 0,
                             'cancel': 0}
-        self.return_list = [['Tracking id', 'Status']]
+        self.return_data_list = [['Tracking id', 'Status']]
+        self.return_type_scan = None
 
         self.return_type_input.setDisabled(True)
         self.record_button.clicked.connect(self.record_next)
@@ -44,28 +45,34 @@ class ReturnSheetWindow(baseClass):
     def record_next(self):
         try:
             user_input = self.user_input.text()
-            status = self.return_type_input.text()
+            # return_type_scan = ""
 
-            if user_input.lower() in self.return_data:
+            if user_input.lower() in self.return_data_count:
                 self.return_type_input.setText(user_input)
+                self.return_type_scan = user_input
 
-            if status != "" and user_input.lower() not in self.return_data:
+            if self.return_type_scan is not None and user_input.lower() not in self.return_data_count:
                 # add to return list
-                self.return_list.append([user_input, status])
+                self.return_data_list.append([user_input, self.return_type_scan])
 
                 # add to return count
-                return_count = self.return_data.get(status)
-                self.return_data.update({status: return_count + 1})
+                # get count to return type scanned
+                return_count = self.return_data_count.get(self.return_type_scan.lower())
+                # update count fot scanned return by 1
+                self.return_data_count.update({self.return_type_scan.lower(): return_count + 1})
+
+            if user_input.lower == "save":
+                self.save_return_sheet()
 
             self.user_input.clear()
 
             # update text field
-            rto = self.return_data.get('rto')
-            customer_return = self.return_data.get('customer return')
-            wrong_courier_return = self.return_data.get('wrong courier return')
-            wrong_customer_return = self.return_data.get('wrong customer return')
-            cancel = self.return_data.get('cancel')
-            total = rto + customer_return + wrong_courier_return + wrong_customer_return
+            rto = self.return_data_count.get('rto')
+            customer_return = self.return_data_count.get('customer return')
+            wrong_courier_return = self.return_data_count.get('wrong courier return')
+            wrong_customer_return = self.return_data_count.get('wrong customer return')
+            cancel = self.return_data_count.get('cancel')
+            total = rto + customer_return + wrong_courier_return + wrong_customer_return + cancel
             return_data_string = f"Rto: {rto}\n" \
                                  f"Customer Return: {customer_return}\n" \
                                  f"Wrong Courier Return: {wrong_courier_return}\n" \
@@ -85,7 +92,7 @@ class ReturnSheetWindow(baseClass):
                                                    "Excel Files (*.xlsx)")
             sheet_name = "Return Scan"  # sheet name and workbook name
             if filepath[0] != "":
-                create_xlsx_file(self.return_list, filepath[0], sheet_name)
+                create_xlsx_file(self.return_data_list, filepath[0], sheet_name)
                 setting_last_file_path.setValue("return_sheet_path", filepath[0])
         except Exception as e:
             print(e)
