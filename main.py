@@ -12,7 +12,7 @@ from code.OrderEntry import OrderEntryWindow
 from code.OrderSheet import OrderSheetWindow
 from code.OrderWebScrap import OrderScrapWindow
 from code.ReturnSheet import ReturnSheetWindow
-from code.PaymentSheet import PaymentEntryWindow
+from code.PaymentEntry import PaymentEntryWindow
 
 gui_file = "gui/mainApplication.ui"
 Ui_order_form, baseClass = uic.loadUiType(gui_file)
