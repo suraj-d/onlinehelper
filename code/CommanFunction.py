@@ -29,6 +29,19 @@ def read_excel_sheet(excel_file_path, sheet_name):
         return {'error': str(e)}
 
 
+def get_excel_sheet_name(excel_file_path):
+    """
+
+    :param excel_file_path:
+    :return: sheet_name list
+    """
+    try:
+        wb = load_workbook(excel_file_path)
+        return {'sheet_name': wb.sheetnames}
+    except Exception as e:
+        return {'error': str(e)}
+
+
 def create_xlsx_file(content, save_path, sheet_name="Sheet 1"):
     """
     :param content: content to write in excel sheet
