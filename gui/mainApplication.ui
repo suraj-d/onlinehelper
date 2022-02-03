@@ -156,13 +156,6 @@ color: rgb(255, 255, 255);</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="scrap_order_button">
-         <property name="text">
-          <string>Create Web Scrap Txt</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </item>
@@ -172,17 +165,17 @@ color: rgb(255, 255, 255);</string>
        <string>Order Check</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="3" column="0" colspan="2">
+        <widget class="QPushButton" name="create_return_sheet_button">
+         <property name="text">
+          <string>Create Return Sheet</string>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="0" colspan="2">
         <widget class="QPushButton" name="create_order_sheet_button">
          <property name="text">
           <string>Create Order Sheet</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="order_check_button">
-         <property name="text">
-          <string>Order Check ⇗</string>
          </property>
         </widget>
        </item>
@@ -199,10 +192,22 @@ color: rgb(255, 255, 255);</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0" colspan="2">
-        <widget class="QPushButton" name="create_return_sheet_button">
+       <item row="1" column="0">
+        <widget class="QPushButton" name="order_check_button">
          <property name="text">
-          <string>Create Return Sheet</string>
+          <string>Order Check ⇗</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QPushButton" name="scrap_order_button">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Create Web Scrap</string>
          </property>
         </widget>
        </item>

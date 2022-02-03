@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>506</width>
-    <height>200</height>
+    <width>617</width>
+    <height>225</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -16,18 +16,23 @@
     <height>0</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Create Order Sheet</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
        <widget class="QLabel" name="protal_name_lbl">
         <property name="maximumSize">
          <size>
-          <width>60</width>
+          <width>90</width>
           <height>16777215</height>
          </size>
         </property>
@@ -36,7 +41,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item>
        <widget class="QComboBox" name="portal_combo_box">
         <property name="minimumSize">
          <size>
@@ -124,6 +129,9 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="4" column="0">
+     <widget class="QPlainTextEdit" name="result_input"/>
     </item>
    </layout>
   </widget>
