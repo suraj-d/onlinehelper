@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import win32com.client as win32
 import sys
 from os import path, startfile
@@ -147,11 +149,12 @@ class OrderSheetWindow(baseclass):
                             save_loc)
 
             self.open_folder_button.setDisabled(False)
-
+            self.result_input.setPlainText(f"File Generated on {datetime.now().strftime('%Y-%m-%d')} "
+                                           f"at {datetime.now().strftime('%H:%M:%S')}")
             if self.open_check_box.isChecked():
                 self.auto_open_file()
         except Exception as e:
-            print(e)
+            self.result_input.setPlainText(e)
 
     def open_folder(self):
         try:
@@ -188,7 +191,7 @@ def xls_to_xlsx(file_path, save_path, sheet_name):
 
 
 def csv_to_xlsx(file_path, save_path, sheet_name):
-    f = open(file_path, 'r')
+    f = open(file_path, 'r', encoding="utf8")
 
     if 'txt' in file_path:
         reader_list = reader(f, delimiter="\t")
