@@ -5,7 +5,7 @@ from os import path
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from pyperclip import copy
 
-from code.CommanFunction import read_excel_sheet, get_excel_sheet_name
+from src.CommanFunction import read_excel_sheet, get_excel_sheet_name
 from json import dumps
 from PyQt5 import uic
 from PyQt5.QtCore import QSettings
@@ -112,6 +112,7 @@ class OrderScrapWindow(baseclass):
             last_row = int(self.last_row_input.text())
 
             data_string = get_web_scrap_json_string(portal_selected, ws, start_row, last_row)
+            self.code_input.clear()
             self.code_input.setPlainText(data_string.get('web_scrap_string'))
 
         except Exception as e:
@@ -132,24 +133,24 @@ class OrderScrapWindow(baseclass):
 
 
 # MAIN FUNCTIONS
-date = datetime.now().strftime("%Y-%m-%d %H%M")
-
-scrap_code = {'Amazon Order Detail': {
-    'head': '{"_id":"' + date + ' amazon_detail","startUrl":',
-    'url': u'https://sellercentral.amazon.in/orders-v3/order/',
-    'tail': r',"selectors":[{"delay":0,"id":"order_id","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".a-span12 span.a-text-bold","type":"SelectorText"},{"delay":0,"id":"sku","multiple":false,"parentSelectors":["orderDetaiBox"],"regex":"","selector":"div.product-name-column-word-wrap-break-all:nth-of-type(3) div","type":"SelectorText"},{"delay":0,"id":"rate","multiple":false,"parentSelectors":["orderDetaiBox"],"regex":"","selector":"td.a-text-right span","type":"SelectorText"},{"delay":0,"id":"orderDetaiBox","multiple":true,"parentSelectors":["_root"],"selector":".a-spacing-large tbody tr","type":"SelectorElement"},{"delay":0,"id":"buyer_name","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"span div > span:nth-of-type(1)","type":"SelectorText"},{"delay":0,"id":"gst_state","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"span span:nth-of-type(5)","type":"SelectorText"}]}'
-},
-    'Flipkart Order Detail': {
-        'head': '{"_id":"' + date + ' flipkart_detail","startUrl":',
-        'url': u'https://seller.flipkart.com/index.html#dashboard/my-orders?serviceProfile=seller-fulfilled&shipmentType=easy-ship&orderState=shipments_delivered&orderItemId=',
-        'tail': r',"selectors":[{"clickElementSelector":"td.clickable","clickElementUniquenessType":"uniqueText","clickType":"clickOnce","delay":2000,"discardInitialElements":"do-not-discard","id":"click","multiple":false,"parentSelectors":["_root"],"selector":"td.clickable","type":"SelectorElementClick"},{"delay":0,"id":"name","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"div.styles__ItemWrapperVertical-sc-9qxfse-1:nth-of-type(2) div:nth-of-type(2)","type":"SelectorText"},{"delay":0,"id":"state","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".styles__ItemWrapperVertical-sc-9qxfse-1 div:nth-of-type(6)","type":"SelectorText"},{"delay":0,"id":"box","multiple":true,"parentSelectors":["_root"],"selector":"div.styles__OrderItemContainer-sc-9qxfse-6","type":"SelectorElement"},{"delay":0,"id":"orderid","multiple":false,"parentSelectors":["box"],"regex":"","selector":"div.styles__ItemDetails-sc-1bxatwx-6:nth-of-type(2) div.styles__Value-sc-1bxatwx-14","type":"SelectorText"},{"delay":0,"id":"sku","multiple":false,"parentSelectors":["box"],"regex":"","selector":"div.styles__ItemDetails-sc-1bxatwx-6:nth-of-type(1) div.styles__Value-sc-1bxatwx-14","type":"SelectorText"},{"delay":0,"id":"rate","multiple":false,"parentSelectors":["box"],"regex":"","selector":"div:nth-of-type(1) div:nth-of-type(6) div.styles__Value-sc-1bxatwx-14","type":"SelectorText"},{"delay":0,"id":"qty","multiple":false,"parentSelectors":["box"],"regex":"","selector":"div:nth-of-type(1) div.styles__PriceParams-sc-1bxatwx-11:nth-of-type(2) div.styles__Value-sc-1bxatwx-14","type":"SelectorText"}]}'
-    },
-    'Flipkart Payment Detail': {
-        'head': '{"_id":"' + date + ' flipkart_payment","startUrl":',
-        'url': u'https://seller.flipkart.com/index.html#dashboard/payments/transactions?filter=',
-        'tail': r',"selectors":[{"delay":0,"id":"order_id","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".cf-list td:nth-of-type(1)","type":"SelectorText"},{"delay":0,"id":"payment","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"span.total-amount","type":"SelectorText"}]}'
+def scrap_code():
+    date = datetime.now().strftime("%Y-%m-%d %H%M%S")
+    return {'Amazon Order Detail': {
+        'head': '{"_id":"' + date + ' amazon_detail","startUrl":',
+        'url': u'https://sellercentral.amazon.in/orders-v3/order/',
+        'tail': r',"selectors":[{"delay":0,"id":"order_id","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".a-span12 span.a-text-bold","type":"SelectorText"},{"delay":0,"id":"sku","multiple":false,"parentSelectors":["orderDetaiBox"],"regex":"","selector":"div.product-name-column-word-wrap-break-all:nth-of-type(3) div","type":"SelectorText"},{"delay":0,"id":"rate","multiple":false,"parentSelectors":["orderDetaiBox"],"regex":"","selector":"td.a-text-right span","type":"SelectorText"},{"delay":0,"id":"orderDetaiBox","multiple":true,"parentSelectors":["_root"],"selector":".a-spacing-large tbody tr","type":"SelectorElement"},{"delay":0,"id":"buyer_name","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"span div > span:nth-of-type(1)","type":"SelectorText"},{"delay":0,"id":"gst_state","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"span span:nth-of-type(5)","type":"SelectorText"}]}'
+        },
+        'Flipkart Order Detail': {
+            'head': '{"_id":"' + date + ' flipkart_detail","startUrl":',
+            'url': u'https://seller.flipkart.com/index.html#dashboard/my-orders?serviceProfile=seller-fulfilled&shipmentType=easy-ship&orderState=shipments_delivered&orderItemId=',
+            'tail': r',"selectors":[{"clickElementSelector":"td.clickable","clickElementUniquenessType":"uniqueText","clickType":"clickOnce","delay":2000,"discardInitialElements":"do-not-discard","id":"click","multiple":false,"parentSelectors":["_root"],"selector":"td.clickable","type":"SelectorElementClick"},{"delay":0,"id":"name","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"div.styles__ItemWrapperVertical-sc-9qxfse-1:nth-of-type(2) div:nth-of-type(2)","type":"SelectorText"},{"delay":0,"id":"state","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".styles__ItemWrapperVertical-sc-9qxfse-1 div:nth-of-type(6)","type":"SelectorText"},{"delay":0,"id":"box","multiple":true,"parentSelectors":["_root"],"selector":"div.styles__OrderItemContainer-sc-9qxfse-6","type":"SelectorElement"},{"delay":0,"id":"orderid","multiple":false,"parentSelectors":["box"],"regex":"","selector":"div.styles__ItemDetails-sc-1bxatwx-6:nth-of-type(2) div.styles__Value-sc-1bxatwx-14","type":"SelectorText"},{"delay":0,"id":"sku","multiple":false,"parentSelectors":["box"],"regex":"","selector":"div.styles__ItemDetails-sc-1bxatwx-6:nth-of-type(1) div.styles__Value-sc-1bxatwx-14","type":"SelectorText"},{"delay":0,"id":"rate","multiple":false,"parentSelectors":["box"],"regex":"","selector":"div:nth-of-type(1) div:nth-of-type(6) div.styles__Value-sc-1bxatwx-14","type":"SelectorText"},{"delay":0,"id":"qty","multiple":false,"parentSelectors":["box"],"regex":"","selector":"div:nth-of-type(1) div.styles__PriceParams-sc-1bxatwx-11:nth-of-type(2) div.styles__Value-sc-1bxatwx-14","type":"SelectorText"}]}'
+        },
+        'Flipkart Payment Detail': {
+            'head': '{"_id":"' + date + ' flipkart_payment","startUrl":',
+            'url': u'https://seller.flipkart.com/index.html#dashboard/payments/transactions?filter=',
+            'tail': r',"selectors":[{"delay":0,"id":"order_id","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".cf-list td:nth-of-type(1)","type":"SelectorText"},{"delay":0,"id":"payment","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"span.total-amount","type":"SelectorText"}]}'
+        }
     }
-}
 
 
 def get_web_scrap_json_string(portal_name, ws, start_row, last_row):
@@ -160,10 +161,10 @@ def get_web_scrap_json_string(portal_name, ws, start_row, last_row):
     :param last_row:
     :return: dict {'web_scrap_string': json_string}
     """
-    head = scrap_code.get(portal_name).get('head')
-    url = scrap_code.get(portal_name).get('url')
+    head = scrap_code().get(portal_name).get('head')
+    url = scrap_code().get(portal_name).get('url')
     mid = []
-    tail = scrap_code.get(portal_name).get('tail')
+    tail = scrap_code().get(portal_name).get('tail')
 
     try:
         for row in ws.iter_rows(values_only=True, min_row=start_row, max_row=last_row):
