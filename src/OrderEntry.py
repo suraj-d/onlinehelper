@@ -9,8 +9,8 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import QApplication, QFileDialog
 from mysql.connector import connect
 
-from code.xmlFormats import head_xml, order_body_xml, return_body_xml, tail_xml
-from code.CommanFunction import read_excel_sheet, create_text_file
+from src.xmlFormats import head_xml, order_body_xml, return_body_xml, tail_xml
+from src.CommanFunction import read_excel_sheet, create_text_file
 
 if __name__ == "__main__":
     gui_file = "../gui/createTallyXML.ui"
@@ -30,7 +30,7 @@ class OrderEntryWindow(baseClass):
         if self.sender() is not None:
             self.sending_button = self.sender().objectName()
         else:
-            self.sending_button = "order_entry_button"
+            self.sending_button = "return_entry_button"
 
         # ui call button names
         self.order_button = "order_entry_button"
@@ -344,7 +344,7 @@ def get_return_xml_file(ws, start_row: int, last_row: int):
 def validate_sql_connection():
     try:
         mysqldb = connect(
-            host='192.168.0.2',  # '192.168.0.2'
+            host='sunserver',  # '192.168.0.2'
             port='3306',  # 3306
             username='sunfashion',
             password='8632',
