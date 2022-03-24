@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QFileDialog, QApplication
 from PyQt5.QtCore import QSettings
 from PyQt5 import uic
 
-from code.CommanFunction import create_xlsx_file
+from src.CommanFunction import create_xlsx_file
 
 if __name__ == "__main__":
     gui_file = "../gui/createOrderSheet.ui"
@@ -35,15 +35,18 @@ class OrderSheetWindow(baseclass):
         self.generate_sheet_button.setDisabled(True)
         self.open_folder_button.setDisabled(True)
 
-        # button connection
-        self.portal_combo_box.addItems(["Select Company", "Amazon", "Flipkart", "Meesho"])
-        self.portal_combo_box.currentIndexChanged.connect(self.selectionchange)  # get value on selection change
-        self.file_path_input.textChanged.connect(self.validate_gen_name)
-        self.gen_name_input.textChanged.connect(self.validate_gen_name)
+        try:
+            # button connection
+            self.portal_combo_box.addItems(["Select Company", "Amazon", "Flipkart", "Meesho", "Shopee"])
+            self.portal_combo_box.currentIndexChanged.connect(self.selectionchange)  # get value on selection change
+            self.file_path_input.textChanged.connect(self.validate_gen_name)
+            self.gen_name_input.textChanged.connect(self.validate_gen_name)
 
-        self.browse_button.clicked.connect(self.browse_files)
-        self.generate_sheet_button.clicked.connect(self.create_order_sheet)
-        self.open_folder_button.clicked.connect(self.open_folder)
+            self.browse_button.clicked.connect(self.browse_files)
+            self.generate_sheet_button.clicked.connect(self.create_order_sheet)
+            self.open_folder_button.clicked.connect(self.open_folder)
+        except Exception as e:
+            self.result_input.setPlainText(e)
 
         self.show()
 
@@ -105,6 +108,7 @@ class OrderSheetWindow(baseclass):
             start_row = None
             converted_file_path = None
 
+            # zero start excel row
             if self.portal_selected.lower() == 'amazon':
                 order_id_row = 0
                 buyer_name_row = 8
@@ -141,6 +145,21 @@ class OrderSheetWindow(baseclass):
 
                 # # get original data base excel file path
                 converted_file_path = xls_to_xlsx(self.file_path, self.save_file, base_sheet_name)
+            elif self.portal_selected.lower() == 'shopee':
+                order_id_row = 1
+                buyer_name_row = 8
+                state_row = 9
+                amount_row = 4
+                sku_row = 6
+                qty_row = 5
+                start_row = 2
+
+                original_sheet_name = "Original Order Data"
+                copy_sheet = xls_to_xlsx(self.file_path,self.save_file, original_sheet_name)
+                converted_file_path = shopee_original_data(copy_sheet.get("save_path"), original_sheet_name)
+
+
+
 
             # load saved original data base file
             save_loc = converted_file_path.get('save_path')
@@ -154,6 +173,7 @@ class OrderSheetWindow(baseclass):
             if self.open_check_box.isChecked():
                 self.auto_open_file()
         except Exception as e:
+            print(f"create order sheet: {e}")
             self.result_input.setPlainText(e)
 
     def open_folder(self):
@@ -172,6 +192,7 @@ class OrderSheetWindow(baseclass):
             print(e)
 
 
+# FUNCTIONS
 def xls_to_xlsx(file_path, save_path, sheet_name):
     # convert xls to xlsx for meesho
     excel = win32.gencache.EnsureDispatch('Excel.Application')
@@ -194,9 +215,9 @@ def csv_to_xlsx(file_path, save_path, sheet_name):
     f = open(file_path, 'r', encoding="utf8")
 
     if 'txt' in file_path:
-        reader_list = reader(f, delimiter="\t")
+        reader_list = reader(f, delimiter="\t") # amazon format
     else:
-        reader_list = reader(f)
+        reader_list = reader(f) # flipkart format
 
     # # set wb and sheet name
     # wb = Workbook()  # load_workbook(file_path)
@@ -226,7 +247,10 @@ def sku_tally_sheet(wb, start_row, sku_row, order_id_row, buyer_name_row, qty_ro
         row start at '0'
         """
         sku = row[sku_row]
-        qty = int(row[qty_row])
+        if row[qty_row] is not None:
+            qty = int(row[qty_row])
+        else:
+            qty = row[qty_row]
 
         order_id = row[order_id_row]
         buyer_name = row[buyer_name_row]
@@ -259,6 +283,38 @@ def sku_tally_sheet(wb, start_row, sku_row, order_id_row, buyer_name_row, qty_ro
     wb.save(save_path)
 
     return {'save_path': save_path}
+
+
+def shopee_original_data(file_path, sheet_name):
+    wb = load_workbook(file_path)
+    ws_data = wb[sheet_name]  # get data form original data sheet
+
+    wb.create_sheet(index=1, title='Original Data')
+    ws1 = wb['Original Data']
+    new_original_data = [['Tracking ID', 'Order ID', 'Product Name', 'Variation Name',
+                          'Price', 'Quantity', 'Sku', 'Parent sku', 'Buyer Name', 'State']]
+    for row in ws_data.iter_rows(min_row=2, max_row=ws_data.max_row, values_only=True):
+        tracking_id = row[0]
+        order_id = row[1]
+        product_detail = row[2].split(";")
+        product_name = product_detail[0].split(':')[1].strip()
+        variation_name = product_detail[1].split(':')[1].strip()
+        price = product_detail[2].split(' ')[3]
+        qty = product_detail[3].split(':')[1].strip()
+        sku = product_detail[4].split(':')[1].strip()
+        parent_sku = product_detail[5].split(':')[1].strip()
+        buyer_name = "Shopee cust"
+        state = "Check order pdf"
+
+        new_original_data.append([tracking_id, order_id, product_name, variation_name, price, qty, sku, parent_sku, buyer_name, state])
+
+    for row in new_original_data:
+        ws1.append(row)
+
+    # save all
+    wb.save(file_path)
+
+    return {'save_path': file_path}
 
 
 if __name__ == '__main__':
