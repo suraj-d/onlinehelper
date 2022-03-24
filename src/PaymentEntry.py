@@ -8,8 +8,8 @@ from PyQt5.QtWidgets import QApplication, QFileDialog
 from openpyxl import load_workbook
 from pyperclip import copy
 
-from code.CommanFunction import create_text_file
-from code.xmlFormats import head_xml, tail_xml, payment_body_1_xml, payment_bank_xml, payment_advance_fee_xml, \
+from src.CommanFunction import create_text_file
+from src.xmlFormats import head_xml, tail_xml, payment_body_1_xml, payment_bank_xml, payment_advance_fee_xml, \
     payment_general_exp_xml, payment_unavl_xml, payment_order_data_1_xml, payment_order_data_2_xml, \
     payment_order_data_3_xml
 
@@ -49,7 +49,7 @@ class PaymentEntryWindow(baseClass):
         excel_file_path = self.excel_path_input.text()
         sheet_name = "PaymentXML"
         xml_date = get_payment_xml_file(excel_file_path, sheet_name)
-
+        print("generating xml")
         if 'error' not in xml_date:
             xml_string = xml_date.get('xml_string')
             folder_path = path.split(self.excel_path_input.text())[0]
@@ -72,7 +72,7 @@ def get_payment_xml_file(excel_file_path, sheet_name):
     xml_string = ""
     wb = load_workbook(excel_file_path)
     ws = wb[sheet_name]
-
+    print('excel sheet loaded')
     # Particular data
     ws_particular_table = ws.tables['particularTable']
     particular_data_range = ws[ws_particular_table.ref]
