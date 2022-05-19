@@ -1,5 +1,6 @@
 from openpyxl import load_workbook, Workbook
 from os import path
+from mysql.connector import connect
 
 
 # read excel file and return row data
@@ -31,7 +32,6 @@ def read_excel_sheet(excel_file_path, sheet_name):
 
 def get_excel_sheet_name(excel_file_path):
     """
-
     :param excel_file_path:
     :return: sheet_name list
     """
@@ -75,4 +75,48 @@ def create_text_file(content: str, folder_path, txt_file_name):
     f.write(content)
     f.close()
     return path.normpath(txt_file_loc)
+
+
+# get sql connection and return mysqldb or error
+def get_sql_connection():
+    """
+
+    :return: mysqldb (database) or error
+    """
+    try:
+        mysqldb = connect(
+            host='sunserver',  # '192.168.0.2'
+            port='3306',  # 3306
+            username='sunfashion',
+            password='8632',
+            database='online_database'
+        )
+        # print(mysqldb)
+    except Exception as e:
+        return {'error': e}
+    else:
+        return {"mysqldb": mysqldb}
+
+# get data from table
+def get_table_data(query, args=None):
+    """
+
+    :param query: select query
+    :param args: any arguments to pass in select query
+    :return: "data", multi tuple
+    """
+    sql_validate = get_sql_connection()
+    if 'error' in sql_validate:
+        error = sql_validate.get("error")
+        return {'error': error}
+
+    mysqldb = sql_validate.get('mysqldb')
+    cursor = mysqldb.cursor()
+
+    cursor.execute(query, args)
+    data = cursor.fetchall()
+    # print(data)
+
+    return {'data': data}
+
 
