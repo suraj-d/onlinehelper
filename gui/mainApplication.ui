@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>378</width>
-    <height>523</height>
+    <height>405</height>
    </rect>
   </property>
   <property name="font">
@@ -23,6 +23,45 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
+    <item row="3" column="5" rowspan="3">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>112</width>
+        <height>265</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="4" column="1">
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>169</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="0" column="3">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>98</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
     <item row="0" column="1">
      <widget class="QGroupBox" name="tally_xml_group">
       <property name="title">
@@ -97,33 +136,7 @@ color: rgb(255, 255, 255);</string>
       </layout>
      </widget>
     </item>
-    <item row="0" column="3">
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>98</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="3" column="1">
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>169</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="2" column="1">
+    <item row="2" column="5">
      <widget class="QGroupBox" name="sheet_group">
       <property name="title">
        <string>Sheets</string>
@@ -159,23 +172,23 @@ color: rgb(255, 255, 255);</string>
       </layout>
      </widget>
     </item>
-    <item row="1" column="1">
+    <item row="2" column="1" rowspan="2">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
        <string>Order Check</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="3" column="0" colspan="2">
-        <widget class="QPushButton" name="create_return_sheet_button">
-         <property name="text">
-          <string>Create Return Sheet</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="2">
+       <item row="4" column="0" colspan="2">
         <widget class="QPushButton" name="create_order_sheet_button">
          <property name="text">
           <string>Create Order Sheet</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="order_check_button">
+         <property name="text">
+          <string>Order Check ⇗</string>
          </property>
         </widget>
        </item>
@@ -192,14 +205,7 @@ color: rgb(255, 255, 255);</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="order_check_button">
-         <property name="text">
-          <string>Order Check ⇗</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="2">
+       <item row="6" column="0" colspan="2">
         <widget class="QPushButton" name="scrap_order_button">
          <property name="font">
           <font>
@@ -211,21 +217,22 @@ color: rgb(255, 255, 255);</string>
          </property>
         </widget>
        </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QPushButton" name="create_return_sheet_button">
+         <property name="text">
+          <string>Create Return Sheet</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QPushButton" name="consignment_check_button">
+         <property name="text">
+          <string>Consignment Check</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
-    </item>
-    <item row="2" column="5" rowspan="3">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>112</width>
-        <height>265</height>
-       </size>
-      </property>
-     </spacer>
     </item>
    </layout>
   </widget>
