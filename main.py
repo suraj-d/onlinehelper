@@ -6,13 +6,14 @@ from PyQt5.QtCore import QSettings
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 
-from code.GoogleSheets import *
-from code.OpenURL import OrderUrlDialog, open_order_url
-from code.OrderEntry import OrderEntryWindow
-from code.OrderSheet import OrderSheetWindow
-from code.OrderWebScrap import OrderScrapWindow
-from code.ReturnSheet import ReturnSheetWindow
-from code.PaymentEntry import PaymentEntryWindow
+from src.GoogleSheets import *
+from src.OpenURL import OrderUrlDialog, open_order_url
+from src.OrderEntry import OrderEntryWindow
+from src.OrderSheet import OrderSheetWindow
+from src.OrderWebScrap import OrderScrapWindow
+from src.ReturnSheet import ReturnSheetWindow
+from src.PaymentEntry import PaymentEntryWindow
+from src.ViewConsignment import ViewConsignmentWindow
 
 gui_file = "gui/mainApplication.ui"
 Ui_order_form, baseClass = uic.loadUiType(gui_file)
@@ -42,6 +43,8 @@ class MainWindow(baseClass):
         # order check
         self.order_check_button.clicked.connect(self.order_check)
         self.edit_order_url.clicked.connect(self.order_url)
+
+        self.consignment_check_button.clicked.connect(self.consignment_check)
 
         self.create_order_sheet_button.clicked.connect(self.order_sheet)
         self.create_return_sheet_button.clicked.connect(self.return_sheet)
@@ -97,6 +100,10 @@ class MainWindow(baseClass):
     @classmethod
     def order_url(cls):
         cls.edit_url_window = OrderUrlDialog()
+
+    @classmethod
+    def consignment_check(cls):
+        cls.consignment_window = ViewConsignmentWindow()
 
     @classmethod
     def order_sheet(cls):
