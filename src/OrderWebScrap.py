@@ -55,7 +55,7 @@ class OrderScrapWindow(baseclass):
                 self.browse_button.setDisabled(False)
                 if self.excel_sheet_input.text() is not None:
                     self.read_excel_button.setDisabled(False)
-                    self.sheet_name()
+                    self.get_sheet_name()
             else:
                 self.browse_button.setDisabled(True)
                 self.read_excel_button.setDisabled(True)
@@ -78,11 +78,11 @@ class OrderScrapWindow(baseclass):
                 self.excel_sheet_input.setText(file_path)
 
                 # load sheet name in combo box
-                self.sheet_name()
+                self.get_sheet_name()
         except Exception as e:
             print(e)
 
-    def sheet_name(self):
+    def get_sheet_name(self):
         excel_file = self.excel_sheet_input.text()
         sheet_name = get_excel_sheet_name(excel_file).get('sheet_name')
         self.sheet_name_input.clear()
