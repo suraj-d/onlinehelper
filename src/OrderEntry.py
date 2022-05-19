@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication, QFileDialog
 from mysql.connector import connect
 
 from src.xmlFormats import head_xml, order_body_xml, return_body_xml, tail_xml
-from src.CommanFunction import read_excel_sheet, create_text_file
+from src.CommanFunction import read_excel_sheet, create_text_file, get_sql_connection
 
 if __name__ == "__main__":
     gui_file = "../gui/createTallyXML.ui"
@@ -97,6 +97,7 @@ class OrderEntryWindow(baseClass):
         self.xml_data_output.setReadOnly(True)
         self.sql_data_output.setReadOnly(True)
 
+# button connectors
     def button_connection(self):
         # button function
         self.browse_button.clicked.connect(self.browse_files)
@@ -202,7 +203,7 @@ class OrderEntryWindow(baseClass):
         self.start_row = int(self.start_row_input.text())
         self.last_row = int(self.last_row_input.text())
 
-        sql_validation = validate_sql_connection()
+        sql_validation = get_sql_connection()
         input_validation = validate_user_data(self.start_row, self.last_row, self.data_start_row, self.data_last_row)
         if "error" not in sql_validation:  # check mysql connection
             mysqldb = sql_validation.get('mysqldb')  # get sql database
@@ -340,21 +341,21 @@ def get_return_xml_file(ws, start_row: int, last_row: int):
             'file_name': "returnXML"}
 
 
-# validate sql connection and return mysqldb or error
-def validate_sql_connection():
-    try:
-        mysqldb = connect(
-            host='sunserver',  # '192.168.0.2'
-            port='3306',  # 3306
-            username='sunfashion',
-            password='8632',
-            database='online_database'
-        )
-        print(mysqldb)
-    except Exception as e:
-        return {'error': e}
-    else:
-        return {"mysqldb": mysqldb}
+# # validate sql connection and return mysqldb or error
+# def validate_sql_connection():
+#     try:
+#         mysqldb = connect(
+#             host='sunserver',  # '192.168.0.2'
+#             port='3306',  # 3306
+#             username='sunfashion',
+#             password='8632',
+#             database='online_database'
+#         )
+#         print(mysqldb)
+#     except Exception as e:
+#         return {'error': e}
+#     else:
+#         return {"mysqldb": mysqldb}
 
 
 # send order to my sql and return number of data insert
