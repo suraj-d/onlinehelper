@@ -155,7 +155,7 @@ class OrderSheetWindow(baseclass):
                 start_row = 2
 
                 original_sheet_name = "Original Order Data"
-                copy_sheet = xls_to_xlsx(self.file_path,self.save_file, original_sheet_name)
+                copy_sheet = xls_to_xlsx(self.file_path, self.save_file, original_sheet_name)
                 converted_file_path = shopee_original_data(copy_sheet.get("save_path"), original_sheet_name)
 
 
