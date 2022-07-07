@@ -33,7 +33,7 @@ class OrderScrapWindow(baseclass):
 
         # button connection
         combo_box_item = ["Select Company", "Amazon Order Detail", "Flipkart Order Detail",
-                          "Flipkart Payment Detail"]
+                          "Flipkart Payment Detail", "Flipkart Warehouse Order Detail From Payment"]
         self.scrap_type_combo_box.addItems(combo_box_item)
         self.scrap_type_combo_box.currentIndexChanged.connect(self.selectionchange)  # get value on selection change
 
@@ -149,6 +149,11 @@ def scrap_code():
             'head': '{"_id":"' + date + ' flipkart_payment","startUrl":',
             'url': u'https://seller.flipkart.com/index.html#dashboard/payments/transactions?filter=',
             'tail': r',"selectors":[{"delay":0,"id":"order_id","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".cf-list td:nth-of-type(1)","type":"SelectorText"},{"delay":0,"id":"payment","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"span.total-amount","type":"SelectorText"}]}'
+        },
+        'Flipkart Warehouse Order Detail From Payment':{
+            'head':'{"_id":"' + date + ' flipkart_warehouse_detail","startUrl":',
+            'url':u'https://seller.flipkart.com/index.html#dashboard/payments/transactions?filter=',
+            'tail': r',"selectors":[{"delay":0,"id":"click","multiple":false,"parentSelectors":["_root"],"selector":".cf-list td:nth-of-type(2)","type":"SelectorPopupLink"},{"delay":0,"id":"order_id","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"div.details-col-value:nth-of-type(2) div:nth-of-type(2)","type":"SelectorText"},{"delay":0,"id":"order_item_id","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"div.details-col-value:nth-of-type(2) div:nth-of-type(1)","type":"SelectorText"},{"delay":0,"id":"sku","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"div[title]","type":"SelectorText"},{"delay":0,"id":"ship_from","multiple":false,"parentSelectors":["_root"],"regex":"","selector":"div.details-col-value:nth-of-type(2) div:nth-of-type(3)","type":"SelectorText"},{"delay":0,"id":"ship_to","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".order-type-col div:nth-of-type(3)","type":"SelectorText"},{"delay":0,"id":"sale_amount","multiple":false,"parentSelectors":["_root"],"regex":"","selector":".sale-details-body span.sale-value","type":"SelectorText"}]}'
         }
     }
 
