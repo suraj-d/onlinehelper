@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>378</width>
-    <height>405</height>
+    <height>488</height>
    </rect>
   </property>
   <property name="font">
@@ -89,6 +89,13 @@
         <widget class="QPushButton" name="payment_entry_button">
          <property name="text">
           <string>Payment Entry</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="add_sku_button">
+         <property name="text">
+          <string>Add Sku</string>
          </property>
         </widget>
        </item>
@@ -178,13 +185,6 @@ color: rgb(255, 255, 255);</string>
        <string>Order Check</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="4" column="0" colspan="2">
-        <widget class="QPushButton" name="create_order_sheet_button">
-         <property name="text">
-          <string>Create Order Sheet</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="order_check_button">
          <property name="text">
@@ -221,6 +221,13 @@ color: rgb(255, 255, 255);</string>
         <widget class="QPushButton" name="create_return_sheet_button">
          <property name="text">
           <string>Create Return Sheet</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QPushButton" name="create_order_sheet_button">
+         <property name="text">
+          <string>Create Order Sheet</string>
          </property>
         </widget>
        </item>

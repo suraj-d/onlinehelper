@@ -13,6 +13,7 @@ from src.OrderSheet import OrderSheetWindow
 from src.OrderWebScrap import OrderScrapWindow
 from src.ReturnSheet import ReturnSheetWindow
 from src.PaymentEntry import PaymentEntryWindow
+from src.AddNewSku import AddSkuWindow
 from src.ViewConsignment import ViewConsignmentWindow
 
 gui_file = "gui/mainApplication.ui"
@@ -66,6 +67,9 @@ class MainWindow(baseClass):
     @classmethod
     def payment_entry(cls):
         cls.payment_window = PaymentEntryWindow()
+
+    def add_sku(cls):
+        cls.sku_window = AddSkuWindow()
 
     @staticmethod
     def costing_sheet():
