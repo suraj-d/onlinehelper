@@ -1,6 +1,7 @@
 from openpyxl import load_workbook, Workbook
 from os import path
-from mysql.connector import connect
+# from mysql.connector import connect
+from mariadb import connect
 
 
 # read excel file and return row data
@@ -86,9 +87,9 @@ def get_sql_connection():
     try:
         mysqldb = connect(
             host='sunserver',  # '192.168.0.2'
-            port='3306',  # 3306
-            username='sunfashion',
-            password='8632',
+            port=3306,  # 3306
+            user='sunfashion', # username for mysql | user for mariadb
+            password='Sunfashion@1234',
             database='online_database'
         )
         # print(mysqldb)
@@ -96,6 +97,7 @@ def get_sql_connection():
         return {'error': e}
     else:
         return {"mysqldb": mysqldb}
+
 
 # get data from table
 def get_table_data(query, args=None):
@@ -118,5 +120,3 @@ def get_table_data(query, args=None):
     # print(data)
 
     return {'data': data}
-
-
