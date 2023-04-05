@@ -179,21 +179,24 @@ class OrderEntryWindow(baseClass):
                     xml_data = get_return_xml_file(self.ws, self.start_row, self.last_row)
 
                 # write text file
-                xml_string = xml_data.get('xml_string')
-                output_file_name = xml_data.get("file_name")
-                folder_path = path.split(self.file_path_input.text())[0]
-
-                text_location = create_text_file(xml_string, folder_path, output_file_name)
-                self.save_path_input.setText(str(text_location))
-                self.copy_save_button.setDisabled(False)
-                xml_msg: str = f'{xml_data.get("number")} order xml generated\n' \
-                               f'File Location: {text_location}'
+                if 'error' in xml_data:
+                    print(xml_data.get("error"))
+                    xml_msg: str = f'Error: {xml_data.get("error")}'
+                else:
+                    xml_string = xml_data.get('xml_string')
+                    output_file_name = xml_data.get("file_name")
+                    folder_path = path.split(self.file_path_input.text())[0]
+                    text_location = create_text_file(xml_string, folder_path, output_file_name)
+                    self.save_path_input.setText(str(text_location))
+                    self.copy_save_button.setDisabled(False)
+                    xml_msg: str = f'{xml_data.get("number")} order xml generated\n' \
+                                   f'File Location: {text_location}'
             else:
                 xml_msg: str = f'Error: {input_validation.get("error")}'
 
             self.xml_data_output.setText(str(xml_msg))
         except Exception as e:
-            print(e)
+            print(f'generate_xml_file error: {e}')
 
     def copy_text(self):
         copy(self.save_path_input.text())
@@ -215,13 +218,13 @@ class OrderEntryWindow(baseClass):
                     sql_data = send_return_to_mysql(self.ws, self.start_row, self.last_row, mysqldb)
 
                 if 'error' in sql_data:
-                    sql_msg = sql_data.get('error')
+                    sql_msg = f"error in sql_data - {sql_data.get('error')}"
                 else:
                     sql_msg = f"{sql_data.get('number')} of order saved to database"
             else:
-                sql_msg = input_validation.get('error')
+                sql_msg = f"error in input_validation - {input_validation.get('error')}"
         else:
-            sql_msg = sql_validation.get('error')
+            sql_msg = f"error in sql_validation - {sql_validation.get('error')}"
 
         self.sql_data_output.setText(str(sql_msg))
 
@@ -265,25 +268,31 @@ def get_order_xml_file(ws, start_row: int, last_row: int):
         sku_id_with_color = row[5]
         sku_id = row[6]
         quantity = row[7]
-        rate = row[8]
-        shipping = row[9]
-        cgst = row[10]
-        sgst = row[11]
-        igst = row[12]
-        round_off = row[13]
-        total = row[14]
-        portal_name_id = row[15]
-        # warehouse_id = row[16]
-        # tally_company_id = row[17]
+        rate_per_pcs = row[8]
+        net_rate = row[9]
+        shipping = row[10]
+        cgst = row[11]
+        sgst = row[12]
+        igst = row[13]
+        round_off = row[14]
+        invoice_total = row[15]
+        portal_name_id = row[16]
+        # warehouse_id = row[17]
+        # tally_company_id = row[18]
+
+        if tally_vch_number is None:
+            data_number += 1
+            return {'error': f"None Value at row {data_number} in excel sheet"}
 
         date_format = datetime.strftime(date, '%Y%m%d')
         current_date_format = datetime.strftime(datetime.now(), '%d-%b-%Y at %H:%M')
 
         xml_string += order_body_xml(tally_vch_number, date_format, order_id, customer_name, gst_states_id,
-                                     sku_id_with_color, sku_id, quantity, rate, shipping, cgst, sgst, igst, round_off,
-                                     total, portal_name_id, current_date_format)
+                                     sku_id_with_color, sku_id, quantity, rate_per_pcs, net_rate, shipping, cgst, sgst, igst, round_off,
+                                     invoice_total, portal_name_id, current_date_format)
         data_number += 1
         print(f'{data_number} done')
+        print(row)
 
     xml_string += tail_xml(tally_company_id)
 
@@ -298,28 +307,33 @@ def get_return_xml_file(ws, start_row: int, last_row: int):
     tally_company_id = ws.cell(row=start_row, column=19).value
     xml_string = head_xml(tally_company_id)
     for row in ws.iter_rows(min_row=start_row, max_row=last_row, max_col=ws.max_column, values_only=True):
-        return_date = row[0]
-        tally_vch_number = row[1]
+        tally_vch_number = row[0]
+        return_date = row[1]
         return_order_id = row[2]
         return_type = row[3]
         design_name = row[4]
         design_number = row[5]
         piece = row[6]
-        rate = row[7]
-        shipping = row[8]
-        cgst = row[9]
-        sgst = row[10]
-        igst = row[11]
-        round_off = row[12] * -1
-        total = row[13]
-        order_date = row[14]
-        portal_name = row[15]
-        order_gst_state = row[16]
-        customer_name = row[17]
-        tally_company = row[18]
-        order_data_id = row[19]
-        return_initiated_id = row[20]
-        penalty = row[21]
+        net_rate = row[7]
+        rate_per_pcs = row[8]
+        shipping = row[9]
+        cgst = row[10]
+        sgst = row[11]
+        igst = row[12]
+        round_off = row[13] * -1
+        total = row[14]
+        order_date = row[15]
+        portal_name = row[16]
+        order_gst_state = row[17]
+        customer_name = row[18]
+        tally_company = row[19]
+        order_data_id = row[20]
+        return_initiated_id = row[21]
+        penalty = row[22]
+
+        if tally_vch_number is None:
+            data_number += 1
+            return {'error': f"None Value at row {data_number} in excel sheet"}
 
         return_date_format = datetime.strftime(return_date, '%Y%m%d')
         order_date_format = datetime.strftime(order_date, '%Y%m%d')
@@ -327,7 +341,7 @@ def get_return_xml_file(ws, start_row: int, last_row: int):
             datetime.now(), '%d-%b-%Y at %H:%M')
 
         xml_string += return_body_xml(return_date_format, tally_vch_number, return_order_id, return_type, design_name,
-                                      design_number, piece, rate, shipping, cgst, sgst, igst, round_off, total,
+                                      design_number, piece, rate_per_pcs, net_rate, shipping, cgst, sgst, igst, round_off, total,
                                       order_date_format, portal_name, order_gst_state, customer_name,
                                       current_date_format)
 
@@ -361,59 +375,62 @@ def get_return_xml_file(ws, start_row: int, last_row: int):
 # send order to my sql and return number of data insert
 def send_order_to_mysql(ws, start_row, last_row, mysqldb):
     cursor = mysqldb.cursor()
-
-    # insert query
-    def insert_order_data(tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, quantity,
-                          rate, shipping, cgst, sgst, igst, round_off, total, portal_name_id, warehouse_id,
-                          tally_company_id):
-        args = [tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, quantity, rate,
-                shipping, cgst, sgst, igst, round_off, total, portal_name_id, warehouse_id, tally_company_id]
-        cursor.callproc('insert_order_data', args)
-
-    # update query
-    def update_order_data_rate(rate, shipping, cgst, sgst, igst, round_off, total, tally_vch_number):
-        args = [rate, shipping, cgst, sgst, igst,
-                round_off, total, tally_vch_number]
-        cursor.callproc('update_order_data_rate', args)
-
-    # main iter
-    new_data_count = 0
-    for row in ws.iter_rows(min_row=start_row, max_row=last_row, max_col=ws.max_column, values_only=True):
-        tally_vch_number = str(row[0])
-        date = row[1]
-        order_id = str(row[2])
-        customer_name = str(row[3])[:20]
-        gst_states_id = str(row[4])
-        sku_id_with_color = str(row[5])
-        sku_id = str(row[6])
-        quantity = row[7]
-        rate = row[8]
-        shipping = row[9]
-        cgst = row[10]
-        sgst = row[11]
-        igst = row[12]
-        round_off = row[13]
-        total = row[14]
-        portal_name_id = str(row[15])
-        warehouse_id = str(row[16])
-        tally_company_id = str(row[17])
-
+    try:
         # insert query
-        insert_order_data(tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, quantity,
-                          rate, shipping, cgst, sgst, igst, round_off, total, portal_name_id, warehouse_id,
-                          tally_company_id)
+        def insert_order_data(tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, quantity,
+                              net_rate, shipping, cgst, sgst, igst, round_off, invoice_total, portal_name_id, warehouse_id,
+                              tally_company_id):
+            args = [tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, quantity, net_rate,
+                    shipping, cgst, sgst, igst, round_off, invoice_total, portal_name_id, warehouse_id, tally_company_id]
+            cursor.callproc('insert_order_data', args)
 
-        # #update query
-        # update_order_data_rate(rate, shipping, cgst, sgst,
-        #                        igst, round_off, total, tally_vch_number)
+        # update query
+        def update_order_data_rate(rate, shipping, cgst, sgst, igst, round_off, total, tally_vch_number):
+            args = [rate, shipping, cgst, sgst, igst,
+                    round_off, total, tally_vch_number]
+            cursor.callproc('update_order_data_rate', args)
 
-        # commit
-        mysqldb.commit()
+        # main iter
+        new_data_count = 0
+        for row in ws.iter_rows(min_row=start_row, max_row=last_row, max_col=ws.max_column, values_only=True):
+            tally_vch_number = str(row[0])
+            date = row[1]
+            order_id = str(row[2])
+            customer_name = str(row[3])[:20]
+            gst_states_id = str(row[4])
+            sku_id_with_color = str(row[5])
+            sku_id = str(row[6])
+            quantity = row[7]
+            net_rate = row[9]
+            shipping = row[10]
+            cgst = row[11]
+            sgst = row[12]
+            igst = row[13]
+            round_off = row[14]
+            invoice_total = row[15]
+            portal_name_id = str(row[16])
+            warehouse_id = str(row[17])
+            tally_company_id = str(row[18])
 
-        new_data_count += cursor.rowcount
-        print(new_data_count)
+            # insert query
+            insert_order_data(tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, quantity,
+                              net_rate, shipping, cgst, sgst, igst, round_off, invoice_total, portal_name_id, warehouse_id,
+                              tally_company_id)
 
-    return {'number': new_data_count}
+            # #update query
+            # update_order_data_rate(rate, shipping, cgst, sgst,
+            #                        igst, round_off, total, tally_vch_number)
+
+            # commit
+            mysqldb.commit()
+
+            new_data_count += cursor.rowcount
+            print(new_data_count)
+
+        return {'number': new_data_count}
+    except Exception as e:
+        print(f'generate_xml_file error: {e}')
+
 
 
 # send order to my sql and return number of data insert
@@ -421,12 +438,12 @@ def send_return_to_mysql(ws, start_row, last_row, mysqldb):
     cursor = mysqldb.cursor()
     new_data_count = 0
     for row in ws.iter_rows(min_row=start_row, max_row=last_row, max_col=ws.max_column, values_only=True):
-        return_date = row[0]
-        tally_vch_number = row[1]
-        order_data_id = row[19]
+        tally_vch_number = row[0]
+        return_date = row[1]
+        order_data_id = row[20]
         return_type = row[3]
-        return_initiated_id = row[20]
-        penalty = row[21]
+        return_initiated_id = row[21]
+        penalty = row[22]
 
         args = [return_date, tally_vch_number, order_data_id, return_type]
         cursor.callproc('insert_return_data', args)
