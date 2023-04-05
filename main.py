@@ -1,6 +1,7 @@
 import sys
 from os import getlogin
 
+import PyQt5
 from PyQt5 import uic
 from PyQt5.QtCore import QSettings
 from PyQt5.QtGui import QIcon
@@ -13,7 +14,7 @@ from src.OrderSheet import OrderSheetWindow
 from src.OrderWebScrap import OrderScrapWindow
 from src.ReturnSheet import ReturnSheetWindow
 from src.PaymentEntry import PaymentEntryWindow
-from src.AddNewSku import AddSkuWindow
+#from src.AddNewSku import AddSkuWindow
 from src.ViewConsignment import ViewConsignmentWindow
 
 gui_file = "gui/mainApplication.ui"
@@ -39,7 +40,7 @@ class MainWindow(baseClass):
         # tally xml buttons
         self.order_entry_button.clicked.connect(self.order_entry)
         self.return_entry_button.clicked.connect(self.order_entry)
-        self.payment_entry_button.clicked.connect(self.payment_entry)
+        #self.payment_entry_button.clicked.connect(self.payment_entry)
 
         # order check
         self.order_check_button.clicked.connect(self.order_check)
@@ -47,7 +48,7 @@ class MainWindow(baseClass):
 
         self.consignment_check_button.clicked.connect(self.consignment_check)
 
-        self.create_order_sheet_button.clicked.connect(self.order_sheet)
+        # self.create_order_sheet_button.clicked.connect(self.order_sheet)
         self.create_return_sheet_button.clicked.connect(self.return_sheet)
 
         # sheets
@@ -68,8 +69,8 @@ class MainWindow(baseClass):
     def payment_entry(cls):
         cls.payment_window = PaymentEntryWindow()
 
-    def add_sku(cls):
-        cls.sku_window = AddSkuWindow()
+    # def add_sku(cls):
+    #     cls.sku_window = AddSkuWindow()
 
     @staticmethod
     def costing_sheet():
@@ -109,9 +110,9 @@ class MainWindow(baseClass):
     def consignment_check(cls):
         cls.consignment_window = ViewConsignmentWindow()
 
-    @classmethod
-    def order_sheet(cls):
-        cls.order_sheet_window = OrderSheetWindow()
+    # @classmethod
+    # def order_sheet(cls):
+    #     cls.order_sheet_window = OrderSheetWindow()
 
     @classmethod
     def return_sheet(cls):
