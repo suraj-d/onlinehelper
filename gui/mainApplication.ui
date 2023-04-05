@@ -85,20 +85,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="payment_entry_button">
-         <property name="text">
-          <string>Payment Entry</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="add_sku_button">
-         <property name="text">
-          <string>Add Sku</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </item>
@@ -249,7 +235,7 @@ color: rgb(255, 255, 255);</string>
      <x>0</x>
      <y>0</y>
      <width>378</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
