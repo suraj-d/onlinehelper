@@ -17,7 +17,8 @@ def head_xml(tally_company_id):
 
 
 def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, sku_id, quantity,
-                   rate, shipping, cgst, sgst, igst, round_off, total, portal_name_id, current_date):
+                   rate_per_pcs, net_rate, shipping, cgst, sgst, igst, round_off, invoice_total, portal_name_id,
+                   current_date):
     return f"""
             <TALLYMESSAGE xmlns:UDF="TallyUDF">
              <VOUCHER VCHTYPE="Sales" ACTION="Create" OBJVIEW="Invoice Voucher View">
@@ -125,8 +126,8 @@ def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_i
                <ISTRACKPRODUCTION>No</ISTRACKPRODUCTION>
                <ISPRIMARYITEM>No</ISPRIMARYITEM>
                <ISSCRAP>No</ISSCRAP>
-               <RATE>{rate}/Pcs</RATE>
-               <AMOUNT>{rate}</AMOUNT>
+               <RATE>{rate_per_pcs}/Pcs</RATE>
+               <AMOUNT>{net_rate}</AMOUNT>
                <ACTUALQTY> {quantity} Pcs</ACTUALQTY>
                <BILLEDQTY> {quantity} Pcs</BILLEDQTY>
                <BATCHALLOCATIONS.LIST>
@@ -134,7 +135,7 @@ def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_i
                 <BATCHNAME>Primary Batch</BATCHNAME>
                 <DESTINATIONGODOWNNAME>Ready Stock Godown</DESTINATIONGODOWNNAME>
                 <DYNAMICCSTISCLEARED>No</DYNAMICCSTISCLEARED>
-                <AMOUNT>{rate}</AMOUNT>
+                <AMOUNT>{net_rate}</AMOUNT>
                 <ACTUALQTY> {quantity} Pcs</ACTUALQTY>
                 <BILLEDQTY> {quantity} Pcs</BILLEDQTY>
                </BATCHALLOCATIONS.LIST>
@@ -152,7 +153,7 @@ def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_i
                 <ISLASTDEEMEDPOSITIVE>No</ISLASTDEEMEDPOSITIVE>
                 <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>
                 <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>
-                <AMOUNT>{rate}</AMOUNT>
+                <AMOUNT>{net_rate}</AMOUNT>
                </ACCOUNTINGALLOCATIONS.LIST>
               </INVENTORYENTRIES.LIST>
               <LEDGERENTRIES.LIST>
@@ -168,12 +169,12 @@ def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_i
                <ISLASTDEEMEDPOSITIVE>Yes</ISLASTDEEMEDPOSITIVE>
                <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>
                <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>
-               <AMOUNT>-{total}</AMOUNT>
+               <AMOUNT>-{invoice_total}</AMOUNT>
                <BILLALLOCATIONS.LIST>
                 <NAME>{order_id}</NAME>
                 <BILLTYPE>New Ref</BILLTYPE>
                 <TDSDEDUCTEEISSPECIALRATE>No</TDSDEDUCTEEISSPECIALRATE>
-                <AMOUNT>-{total}</AMOUNT>
+                <AMOUNT>-{invoice_total}</AMOUNT>
                </BILLALLOCATIONS.LIST>
               </LEDGERENTRIES.LIST>
               <LEDGERENTRIES.LIST>
@@ -267,7 +268,7 @@ def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_i
 
 
 def return_body_xml(return_date_format, tally_vch_number, return_order_id, return_type, design_name, design_number,
-                    piece, rate, shipping, cgst, sgst, igst, round_off, total, order_date_format, portal_name,
+                    piece, rate_per_pcs, net_rate, shipping, cgst, sgst, igst, round_off, total, order_date_format, portal_name,
                     order_gst_state, customer_name, current_date_format):
     return f""" <TALLYMESSAGE xmlns: UDF = "TallyUDF">
     <VOUCHER VCHTYPE = "Credit Note" ACTION = "Create" OBJVIEW = "Invoice Voucher View">
@@ -379,8 +380,8 @@ def return_body_xml(return_date_format, tally_vch_number, return_order_id, retur
       <ISTRACKPRODUCTION> No </ISTRACKPRODUCTION>
       <ISPRIMARYITEM> No </ISPRIMARYITEM>
       <ISSCRAP> No </ISSCRAP>
-      <RATE>{rate} Pcs </RATE>
-      <AMOUNT>-{rate}</AMOUNT>
+      <RATE>{rate_per_pcs}/Pcs </RATE>
+      <AMOUNT>-{net_rate}</AMOUNT>
       <ACTUALQTY>{piece} Pcs </ACTUALQTY>
       <BILLEDQTY>{piece} Pcs </BILLEDQTY>
          <BATCHALLOCATIONS.LIST>
@@ -388,9 +389,9 @@ def return_body_xml(return_date_format, tally_vch_number, return_order_id, retur
               <BATCHNAME> Primary Batch </BATCHNAME>
               <DESTINATIONGODOWNNAME> Ready Stock Godown </DESTINATIONGODOWNNAME>
               <DYNAMICCSTISCLEARED> No </DYNAMICCSTISCLEARED>
-              <AMOUNT>-{rate}</AMOUNT>
-              <ACTUALQTY>{piece}Pcs</ACTUALQTY>
-              <BILLEDQTY>{piece}Pcs</BILLEDQTY>
+              <AMOUNT>-{net_rate}</AMOUNT>
+              <ACTUALQTY>{piece} Pcs</ACTUALQTY>
+              <BILLEDQTY>{piece} Pcs</BILLEDQTY>
       </BATCHALLOCATIONS.LIST>
       <ACCOUNTINGALLOCATIONS.LIST>
               <OLDAUDITENTRYIDS.LIST TYPE = "Number">
@@ -405,7 +406,7 @@ def return_body_xml(return_date_format, tally_vch_number, return_order_id, retur
           <ISLASTDEEMEDPOSITIVE>Yes</ISLASTDEEMEDPOSITIVE>
           <ISCAPVATTAXALTERED>No</ISCAPVATTAXALTERED>
           <ISCAPVATNOTCLAIMED>No</ISCAPVATNOTCLAIMED>
-          <AMOUNT>-{rate}</AMOUNT>
+          <AMOUNT>-{net_rate}</AMOUNT>
       </ACCOUNTINGALLOCATIONS.LIST>
      </INVENTORYENTRIES.LIST>
     <LEDGERENTRIES.LIST>
@@ -735,7 +736,7 @@ def payment_bank_xml(ledger, amount, deemed_positive, entry_date, portal_name):
 """
 
 
-def payment_order_data_1_xml(ledger,amount,deemed_positive):
+def payment_order_data_1_xml(ledger, amount, deemed_positive):
     """
     :param ledger:
     :param amount:
