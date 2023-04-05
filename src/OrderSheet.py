@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import win32com.client as win32
+# import win32com.client as win32
 import sys
 from os import path, startfile
 from csv import reader
@@ -37,7 +37,7 @@ class OrderSheetWindow(baseclass):
 
         try:
             # button connection
-            self.portal_combo_box.addItems(["Select Company", "Amazon", "Flipkart", "Meesho", "Shopee"])
+            self.portal_combo_box.addItems(["Select Company", "Amazon", "Flipkart", "Shopee"])
             self.portal_combo_box.currentIndexChanged.connect(self.selectionchange)  # get value on selection change
             self.file_path_input.textChanged.connect(self.validate_gen_name)
             self.gen_name_input.textChanged.connect(self.validate_gen_name)
@@ -134,17 +134,17 @@ class OrderSheetWindow(baseclass):
                 # get original data base excel file path
                 converted_file_path = csv_to_xlsx(self.file_path, self.save_file, base_sheet_name)
 
-            elif self.portal_selected.lower() == 'meesho':
-                order_id_row = 2
-                buyer_name_row = 5
-                state_row = 7
-                amount_row = 15
-                sku_row = 9
-                qty_row = 11
-                start_row = 4
-
-                # # get original data base excel file path
-                converted_file_path = xls_to_xlsx(self.file_path, self.save_file, base_sheet_name)
+            # elif self.portal_selected.lower() == 'meesho':
+            #     order_id_row = 2
+            #     buyer_name_row = 5
+            #     state_row = 7
+            #     amount_row = 15
+            #     sku_row = 9
+            #     qty_row = 11
+            #     start_row = 4
+            #
+            #     # # get original data base excel file path
+            #     converted_file_path = xls_to_xlsx(self.file_path, self.save_file, base_sheet_name)
             elif self.portal_selected.lower() == 'shopee':
                 order_id_row = 1
                 buyer_name_row = 8
