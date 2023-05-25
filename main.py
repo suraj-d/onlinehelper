@@ -14,6 +14,7 @@ from src.OrderSheet import OrderSheetWindow
 from src.OrderWebScrap import OrderScrapWindow
 from src.ReturnSheet import ReturnSheetWindow
 from src.PaymentEntry import PaymentEntryWindow
+from src.StockItemXML import StockItemWindow
 #from src.AddNewSku import AddSkuWindow
 from src.ViewConsignment import ViewConsignmentWindow
 
@@ -40,6 +41,7 @@ class MainWindow(baseClass):
         # tally xml buttons
         self.order_entry_button.clicked.connect(self.order_entry)
         self.return_entry_button.clicked.connect(self.order_entry)
+        self.stock_item_button.clicked.connect(self.stock_item_entry)
         #self.payment_entry_button.clicked.connect(self.payment_entry)
 
         # order check
@@ -69,6 +71,9 @@ class MainWindow(baseClass):
     def payment_entry(cls):
         cls.payment_window = PaymentEntryWindow()
 
+    @classmethod
+    def stock_item_entry(cls):
+        cls.stock_item_window = StockItemWindow()
     # def add_sku(cls):
     #     cls.sku_window = AddSkuWindow()
 
