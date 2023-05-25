@@ -62,32 +62,6 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="1">
-     <widget class="QGroupBox" name="tally_xml_group">
-      <property name="title">
-       <string>Tally XML</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="spacing">
-        <number>6</number>
-       </property>
-       <item>
-        <widget class="QPushButton" name="order_entry_button">
-         <property name="text">
-          <string>Order Entry</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="return_entry_button">
-         <property name="text">
-          <string>Return Entry</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
     <item row="0" column="5">
      <widget class="QGroupBox" name="groupBox_2">
       <property name="title">
@@ -221,6 +195,39 @@ color: rgb(255, 255, 255);</string>
         <widget class="QPushButton" name="consignment_check_button">
          <property name="text">
           <string>Consignment Check</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="1" rowspan="2">
+     <widget class="QGroupBox" name="tally_xml_group">
+      <property name="title">
+       <string>Tally XML</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="order_entry_button">
+         <property name="text">
+          <string>Order Entry</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="return_entry_button">
+         <property name="text">
+          <string>Return Entry</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="stock_item_button">
+         <property name="text">
+          <string>Stock Item Entry</string>
          </property>
         </widget>
        </item>
