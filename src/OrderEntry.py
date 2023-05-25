@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication, QFileDialog
 from mysql.connector import connect
 
 from src.xmlFormats import head_xml, order_body_xml, return_body_xml, tail_xml
-from src.CommanFunction import read_excel_sheet, create_text_file, get_sql_connection
+from src.CommanFunction import read_excel_sheet, create_text_file, get_sql_connection, validate_user_data
 
 if __name__ == "__main__":
     gui_file = "../gui/createTallyXML.ui"
@@ -30,7 +30,7 @@ class OrderEntryWindow(baseClass):
         if self.sender() is not None:
             self.sending_button = self.sender().objectName()
         else:
-            self.sending_button = "return_entry_button"
+            self.sending_button = "order_entry_button"
 
         # ui call button names
         self.order_button = "order_entry_button"
@@ -196,7 +196,8 @@ class OrderEntryWindow(baseClass):
 
             self.xml_data_output.setText(str(xml_msg))
         except Exception as e:
-            print(f'generate_xml_file error: {e}')
+            xml_msg = f'generate_xml_file error: {e}'
+            self.xml_data_output.setText(str(xml_msg))
 
     def copy_text(self):
         copy(self.save_path_input.text())
@@ -234,31 +235,31 @@ class OrderEntryWindow(baseClass):
 ##########################
 
 # check user input start and last row and returns error
-def validate_user_data(start_row: int, last_row: int, data_start_row: int, data_last_row: int):
-    # ws = excel worksheet,
-    # start_row and last_row = user define data,
-    # data_start_row and data_last_row = excel data
-    if not isinstance(start_row, int) or not isinstance(last_row, int):
-        return {'error': 'Invalid Input'}
-    elif start_row < data_start_row:
-        return {'error': "Default start row is 2"}
-    elif start_row > data_last_row:
-        return {'error': "start row cannot be more than excel last row"}
-    elif last_row > data_last_row:
-        return {'error': f"Last row in excel is {data_last_row}"}
-    elif last_row < data_start_row:
-        return {'error': "last row cannot be less than excel start row"}
-    elif start_row > last_row:
-        return {'error': 'Start row cannot be more than last row'}
-    else:
-        return {'msg': 'Valid Input'}
+# def validate_user_data(start_row: int, last_row: int, data_start_row: int, data_last_row: int):
+#     # ws = excel worksheet,
+#     # start_row and last_row = user define data,
+#     # data_start_row and data_last_row = excel data
+#     if not isinstance(start_row, int) or not isinstance(last_row, int):
+#         return {'error': 'Invalid Input'}
+#     elif start_row < data_start_row:
+#         return {'error': "Default start row is 2"}
+#     elif start_row > data_last_row:
+#         return {'error': "start row cannot be more than excel last row"}
+#     elif last_row > data_last_row:
+#         return {'error': f"Last row in excel is {data_last_row}"}
+#     elif last_row < data_start_row:
+#         return {'error': "last row cannot be less than excel start row"}
+#     elif start_row > last_row:
+#         return {'error': 'Start row cannot be more than last row'}
+#     else:
+#         return {'msg': 'Valid Input'}
 
 
 # create order xml string and returns xml string, number of data and output file name
 def get_order_xml_file(ws, start_row: int, last_row: int):
     data_number = 0
     tally_company_id = ws.cell(row=start_row, column=18).value
-    xml_string = head_xml(tally_company_id)
+    xml_string = head_xml()
     for row in ws.iter_rows(min_row=start_row, max_row=last_row, max_col=ws.max_column, values_only=True):
         tally_vch_number = row[0]
         date = row[1]
@@ -294,7 +295,7 @@ def get_order_xml_file(ws, start_row: int, last_row: int):
         print(f'{data_number} done')
         print(row)
 
-    xml_string += tail_xml(tally_company_id)
+    xml_string += tail_xml()
 
     return {'xml_string': xml_string,
             'number': data_number,

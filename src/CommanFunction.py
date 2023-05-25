@@ -120,3 +120,23 @@ def get_table_data(query, args=None):
     # print(data)
 
     return {'data': data}
+
+# validate user input for start row and last row
+def validate_user_data(start_row: int, last_row: int, data_start_row: int, data_last_row: int):
+    # ws = excel worksheet,
+    # start_row and last_row = user define data,
+    # data_start_row and data_last_row = excel data
+    if not isinstance(start_row, int) or not isinstance(last_row, int):
+        return {'error': 'Invalid Input'}
+    elif start_row < data_start_row:
+        return {'error': "Default start row is 2"}
+    elif start_row > data_last_row:
+        return {'error': "start row cannot be more than excel last row"}
+    elif last_row > data_last_row:
+        return {'error': f"Last row in excel is {data_last_row}"}
+    elif last_row < data_start_row:
+        return {'error': "last row cannot be less than excel start row"}
+    elif start_row > last_row:
+        return {'error': 'Start row cannot be more than last row'}
+    else:
+        return {'msg': 'Valid Input'}
