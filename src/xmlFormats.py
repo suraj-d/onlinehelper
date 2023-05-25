@@ -1,4 +1,4 @@
-def head_xml(tally_company_id):
+def head_xml():
     return f"""<?xml version="1.0"?>
             <ENVELOPE>
              <HEADER>
@@ -6,22 +6,24 @@ def head_xml(tally_company_id):
              </HEADER>
              <BODY>
               <IMPORTDATA>
-               <REQUESTDESC>
-                <REPORTNAME>Vouchers</REPORTNAME>
-                <STATICVARIABLES>
-                 <SVCURRENTCOMPANY>{tally_company_id}</SVCURRENTCOMPANY>
-                </STATICVARIABLES>
-               </REQUESTDESC>
+               
                <REQUESTDATA>
             """
 
+# REMOVED PART FROM HEAD
+# <REQUESTDESC>
+#                 <REPORTNAME>Vouchers</REPORTNAME>
+#                 <STATICVARIABLES>
+#                  <SVCURRENTCOMPANY>{tally_company_id}</SVCURRENTCOMPANY>
+#                 </STATICVARIABLES>
+#                </REQUESTDESC>
 
 def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_id, sku_id_with_color, sku_id, quantity,
                    rate_per_pcs, net_rate, shipping, cgst, sgst, igst, round_off, invoice_total, portal_name_id,
                    current_date):
     return f"""
             <TALLYMESSAGE xmlns:UDF="TallyUDF">
-             <VOUCHER VCHTYPE="Sales" ACTION="Create" OBJVIEW="Invoice Voucher View">
+             <VOUCHER VCHTYPE="Ecom Sale" ACTION="Create" OBJVIEW="Invoice Voucher View">
               <OLDAUDITENTRYIDS.LIST TYPE="Number">
                <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS>
               </OLDAUDITENTRYIDS.LIST>
@@ -31,10 +33,10 @@ def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_i
               <NARRATION>{sku_id_with_color} {gst_states_id} {order_id}</NARRATION>
               <COUNTRYOFRESIDENCE>India</COUNTRYOFRESIDENCE>
               <PLACEOFSUPPLY>{gst_states_id}</PLACEOFSUPPLY>
-              <CLASSNAME>Online Sale</CLASSNAME>
+              <CLASSNAME>DefaultVoucherClass</CLASSNAME>
               <PARTYNAME>{customer_name}</PARTYNAME>
               <PARTYLEDGERNAME>{portal_name_id}</PARTYLEDGERNAME>
-              <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
+              <VOUCHERTYPENAME>Ecom Sale</VOUCHERTYPENAME>
               <REFERENCE>{order_id}</REFERENCE>
               <VOUCHERNUMBER>{tally_vch_number}</VOUCHERNUMBER>
               <BASICBASEPARTYNAME>{portal_name_id}</BASICBASEPARTYNAME>
@@ -268,30 +270,30 @@ def order_body_xml(tally_vch_number, date, order_id, customer_name, gst_states_i
 
 
 def return_body_xml(return_date_format, tally_vch_number, return_order_id, return_type, design_name, design_number,
-                    piece, rate_per_pcs, net_rate, shipping, cgst, sgst, igst, round_off, total, order_date_format, portal_name,
+                    piece, rate_per_pcs, net_rate, shipping, cgst, sgst, igst, round_off, total, order_date_format,
+                    portal_name,
                     order_gst_state, customer_name, current_date_format):
     return f""" <TALLYMESSAGE xmlns: UDF = "TallyUDF">
-    <VOUCHER VCHTYPE = "Credit Note" ACTION = "Create" OBJVIEW = "Invoice Voucher View">
+    <VOUCHER VCHTYPE = "Ecom Credit Note" ACTION = "Create" OBJVIEW = "Invoice Voucher View">
      <OLDAUDITENTRYIDS.LIST TYPE = "Number">
       <OLDAUDITENTRYIDS> -1 </OLDAUDITENTRYIDS>
      </OLDAUDITENTRYIDS.LIST>
      <DATE>{return_date_format}</DATE>
     <REFERENCEDATE>{return_date_format}</REFERENCEDATE>
     <VATPARTYTRANSRETURNDATE>{order_date_format}</VATPARTYTRANSRETURNDATE>
-    <GUID>e5df2bc1-c84a-4a0b-99f1-f7839af473fd-00001255</GUID>
     <GSTREGISTRATIONTYPE>Consumer</GSTREGISTRATIONTYPE>
     <STATENAME>{order_gst_state}</STATENAME>
     <NARRATION>{return_type} {design_name} {order_gst_state} {return_order_id}</NARRATION>
     <COUNTRYOFRESIDENCE>India</COUNTRYOFRESIDENCE>
     <PARTYGSTIN></PARTYGSTIN>
     <PLACEOFSUPPLY>{order_gst_state}</PLACEOFSUPPLY>
-    <CLASSNAME>OnlineReturn</CLASSNAME>
+    <CLASSNAME>DefaultVoucherClass</CLASSNAME>
      <PARTYNAME>{portal_name}</PARTYNAME>
      <PARTYLEDGERNAME>{portal_name}</PARTYLEDGERNAME>
      <VATPARTYTRANSRETURNNUMBER>{return_order_id}</VATPARTYTRANSRETURNNUMBER>
      <URDORIGINALSALEVALUE> Lesser than or equal to 2.5 lakhs </URDORIGINALSALEVALUE>
      <GSTNATUREOFRETURN> 01-Sales Return </GSTNATUREOFRETURN>
-     <VOUCHERTYPENAME> Credit Note </VOUCHERTYPENAME>
+     <VOUCHERTYPENAME>Ecom Credit Note </VOUCHERTYPENAME>
      <REFERENCE>{return_order_id}</REFERENCE>
      <VOUCHERNUMBER>{tally_vch_number}</VOUCHERNUMBER>
      <BASICBASEPARTYNAME>{portal_name}</BASICBASEPARTYNAME>
@@ -777,7 +779,107 @@ def payment_order_data_3_xml():
         """
 
 
-def tail_xml(tally_company_id):
+def stock_item_name_start(stock_item_name, parent, category, base_unit, alternate_unit, base_qty, alternate_qty):
+    return f""" <TALLYMESSAGE xmlns:UDF="TallyUDF">
+ <STOCKITEM NAME={stock_item_name} RESERVEDNAME="">
+ <OLDAUDITENTRYIDS.LIST TYPE="Number">
+  <OLDAUDITENTRYIDS>-1</OLDAUDITENTRYIDS> 
+  </OLDAUDITENTRYIDS.LIST>
+  <PARENT>{parent}</PARENT> 
+  <CATEGORY>{category}</CATEGORY> 
+  <ENTEREDBY>suraj</ENTEREDBY> 
+  <OBJECTUPDATEACTION>Create</OBJECTUPDATEACTION> 
+  <GSTAPPLICABLE> Applicable</GSTAPPLICABLE> 
+  <TAXCLASSIFICATIONNAME /> 
+  <GSTTYPEOFSUPPLY>Goods</GSTTYPEOFSUPPLY> 
+  <EXCISEAPPLICABILITY> Applicable</EXCISEAPPLICABILITY> 
+  <SALESTAXCESSAPPLICABLE /> 
+  <VATAPPLICABLE> Applicable</VATAPPLICABLE> 
+  <COSTINGMETHOD>Avg. Cost</COSTINGMETHOD> 
+  <VALUATIONMETHOD>Avg. Price</VALUATIONMETHOD> 
+  <BASEUNITS>{base_unit}</BASEUNITS> 
+  <ADDITIONALUNITS>{alternate_unit}</ADDITIONALUNITS>
+  <VATBASEUNIT>{base_unit}</VATBASEUNIT> 
+  <ISCOSTCENTRESON>No</ISCOSTCENTRESON> 
+  <ISBATCHWISEON>No</ISBATCHWISEON> 
+  <ISPERISHABLEON>No</ISPERISHABLEON> 
+  <ISENTRYTAXAPPLICABLE>No</ISENTRYTAXAPPLICABLE> 
+  <ISCOSTTRACKINGON>No</ISCOSTTRACKINGON> 
+  <ISUPDATINGTARGETID>No</ISUPDATINGTARGETID> 
+  <ISDELETED>No</ISDELETED> 
+  <ISSECURITYONWHENENTERED>Yes</ISSECURITYONWHENENTERED> 
+  <ASORIGINAL>Yes</ASORIGINAL> 
+  <ISRATEINCLUSIVEVAT>No</ISRATEINCLUSIVEVAT> 
+  <IGNOREPHYSICALDIFFERENCE>No</IGNOREPHYSICALDIFFERENCE> 
+  <IGNORENEGATIVESTOCK>No</IGNORENEGATIVESTOCK> 
+  <TREATSALESASMANUFACTURED>No</TREATSALESASMANUFACTURED> 
+  <TREATPURCHASESASCONSUMED>No</TREATPURCHASESASCONSUMED> 
+  <TREATREJECTSASSCRAP>No</TREATREJECTSASSCRAP> 
+  <HASMFGDATE>No</HASMFGDATE> 
+  <ALLOWUSEOFEXPIREDITEMS>No</ALLOWUSEOFEXPIREDITEMS> 
+  <IGNOREBATCHES>No</IGNOREBATCHES> 
+  <IGNOREGODOWNS>No</IGNOREGODOWNS> 
+  <ADJDIFFINFIRSTSALELEDGER>No</ADJDIFFINFIRSTSALELEDGER> 
+  <ADJDIFFINFIRSTPURCLEDGER>No</ADJDIFFINFIRSTPURCLEDGER> 
+  <CALCONMRP>No</CALCONMRP> 
+  <EXCLUDEJRNLFORVALUATION>No</EXCLUDEJRNLFORVALUATION> 
+  <ISMRPINCLOFTAX>No</ISMRPINCLOFTAX> 
+  <ISADDLTAXEXEMPT>No</ISADDLTAXEXEMPT> 
+  <ISSUPPLEMENTRYDUTYON>No</ISSUPPLEMENTRYDUTYON> 
+  <GVATISEXCISEAPPL>No</GVATISEXCISEAPPL> 
+  <REORDERASHIGHER>No</REORDERASHIGHER> 
+  <MINORDERASHIGHER>No</MINORDERASHIGHER> 
+  <ISEXCISECALCULATEONMRP>No</ISEXCISECALCULATEONMRP> 
+  <INCLUSIVETAX>No</INCLUSIVETAX> 
+  <GSTCALCSLABONMRP>No</GSTCALCSLABONMRP> 
+  <MODIFYMRPRATE>No</MODIFYMRPRATE> 
+  <ALTERID>14392</ALTERID> 
+  <DENOMINATOR>{base_qty}</DENOMINATOR>
+  <CONVERSION>{alternate_qty}</CONVERSION>
+  <RATEOFVAT>0</RATEOFVAT> 
+  <VATBASENO>1</VATBASENO> 
+  <VATTRAILNO>1</VATTRAILNO> 
+  <VATACTUALRATIO>1</VATACTUALRATIO> 
+  <UPDATEDDATETIME>20230519130127000</UPDATEDDATETIME> 
+ <LANGUAGENAME.LIST>
+ <NAME.LIST TYPE="String">
+  <NAME>{stock_item_name}</NAME> 
+  </NAME.LIST>
+  <LANGUAGEID>1033</LANGUAGEID> 
+  </LANGUAGENAME.LIST>
+  <SCHVIDETAILS.LIST />
+    """
+
+
+def stock_item_component_list_start(component_list_name, component_base_qty, component_base_unit):
+    return f"""<MULTICOMPONENTLIST.LIST>
+  <COMPONENTLISTNAME>{component_list_name}</COMPONENTLISTNAME> 
+  <COMPONENTBASICQTY>{component_base_qty} {component_base_unit}</COMPONENTBASICQTY> 
+    """
+
+
+def stock_item_component_item(component_stock_item_name, component_godown_name, component_stock_item_qty, component_stock_item_unit):
+    return f"""<MULTICOMPONENTITEMLIST.LIST>
+  <NATUREOFITEM>Component</NATUREOFITEM> 
+  <STOCKITEMNAME>{component_stock_item_name}</STOCKITEMNAME> 
+  <GODOWNNAME>{component_godown_name}</GODOWNNAME> 
+  <ACTUALQTY>{component_stock_item_qty} {component_stock_item_unit}</ACTUALQTY> 
+  </MULTICOMPONENTITEMLIST.LIST>
+    """
+
+
+def stock_item_component_list_end():
+    return f"""</MULTICOMPONENTLIST.LIST>
+    """
+
+
+def stock_item_name_end():
+    return f"""< / STOCKITEM >
+    < / TALLYMESSAGE >
+    """
+
+
+def tail_xml():
     return f"""</REQUESTDATA>
     </IMPORTDATA>
     </BODY>
